@@ -1,0 +1,52 @@
+spring:
+  application:
+    name: gateway
+
+server:
+  port: 8080
+
+logging:
+  level:
+    org.springframework.cloud.gateway: TRACE
+    org.springframework.cloud.loadbalancer: TRACE
+    org.springframework.web: info
+
+# Spring Boot Actuator "/health" endpoint configuration (Mostra dettagli aggiuntivi quando si ispeziona /health endpoint)
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+
+# Spring Boot Actuator /info endpoint configuration (Informazioni customizzate da visualizzare quanto di ispeziona /info endpoint)
+info:
+  app:
+    name: Gateway Micorservice
+    description: Microservizio che implementa il Zuul API Gateway
+
+
+---
+spring:
+  profiles: compose
+
+zuul:
+  routes:
+    ingestion:
+      path: '/api/orchestra/**'
+      url: 'http://ingestion:8080'
+    oee-comutation:
+      path: '/api/ssb/**'
+      url: 'http://oee-comutation:8080'
+
+---
+spring:
+  profiles: kub
+
+zuul:
+  ignored-services: "*"
+  routes:
+    ingestion: '/api/orchestra/**'
+    oee-computation: 'api/ssb/**'

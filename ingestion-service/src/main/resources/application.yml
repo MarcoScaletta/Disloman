@@ -1,0 +1,41 @@
+spring:
+  application:
+    name: ingestion
+
+# Kafka Configurations
+  cloud:
+    stream:
+      bindings:
+        greetings-out:
+          destination: greetings
+          content-type: application/json
+      kafka:
+        binder:
+          brokers: kafka:9092
+
+# Spring Boot Actuator "/health" endpoint configuration (Mostra dettagli aggiuntivi quando si ispeziona /health endpoint)
+management:
+  endpoint:
+    health:
+      show-details: always
+
+# Spring Boot Actuator /info endpoint configuration (Informazioni customizzate da visualizzare quanto di ispeziona /info endpoint)
+info:
+  app:
+    name: Ingestion Micorservice
+    description: Microservizio che si occupa di eseguire la dataIngestion/aggregation!
+
+server:
+  port: 8080
+
+---
+spring:
+  profiles: compose
+
+---
+spring:
+  profiles: kub
+
+
+
+

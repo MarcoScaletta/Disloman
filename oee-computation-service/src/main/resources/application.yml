@@ -1,0 +1,45 @@
+spring:
+  application:
+    name: oee-computation
+
+# Kafka Configurations
+  cloud:
+    stream:
+      bindings:
+        greetings-in:
+          destination: greetings
+          content-type: application/json
+          group: oee-Computation-Group
+      kafka:
+        binder:
+          brokers: kafka:9092
+
+  # Mongodb Configurations
+  data:
+    mongodb:
+      database: disloman
+      uri: mongodb://mongo:27017/
+
+# Spring Boot Actuator "/health" endpoint configuration (Mostra dettagli aggiuntivi quando si ispeziona /health endpoint)
+management:
+  endpoint:
+    health:
+      show-details: always
+
+# Spring Boot Actuator /info endpoint configuration (Informazioni customizzate da visualizzare quanto di ispeziona /info endpoint)
+info:
+  app:
+    name: OeeComputation Micorservice
+    description: Microservizio che si occupa di eseguire di calcolare l'OEE!
+
+server:
+  port: 8080
+
+---
+spring:
+  profiles: compose
+
+---
+spring:
+  profiles: kub
+
