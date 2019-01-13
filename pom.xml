@@ -19,8 +19,8 @@
 
 	<developers>
 		<developer>
-			<name>Maurizio Ferrero</name>
-			<email>ferrero.maurizio84@gmail.com</email>
+			<name>Marco Scaletta</name>
+			<email>scalettamarco@yahoo.it</email>
 		</developer>
 	</developers>
 
@@ -43,7 +43,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
-		<docker.image.name>drugotosto84/${project.artifactId}</docker.image.name>
+		<docker.image.name>marcoscaletta/${project.artifactId}</docker.image.name>
 		<docker.image.tag>${project.version}</docker.image.tag>
 		<spring-cloud.version>Finchley.RELEASE</spring-cloud.version>
 		<spring.cloud.k8s.version>0.3.0.RELEASE</spring.cloud.k8s.version>

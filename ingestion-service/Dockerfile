@@ -1,5 +1,5 @@
 FROM openjdk:8-jdk-alpine
-MAINTAINER Maurizio Ferrero <ferrero.maurizio84@gmail.com>
+MAINTAINER Marco Scaletta <scalettamarco@yahoo.it>
 
 ENV PORT 8080
 RUN mkdir -p /usr/local/disloman

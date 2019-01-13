@@ -23,6 +23,6 @@ public class MessageHandler {
         Greeting newGreeting = new Greeting(greeting.getId(),greeting.getMessage()+" MODIFIED", greeting
                 .getTimestamp());
         greetingMongoRepository.save(newGreeting);
-        log.info("Ho eseguito il salvataggio su MongoDB");
+        log.info("Ho eseguito il salvataggio su database MongoDB");
     }
 }
