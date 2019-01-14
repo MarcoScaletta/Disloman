@@ -8,6 +8,8 @@ spring:
       bindings:
         greetings-out:
           destination: greetings
+        corkinglogs-out:
+          destination: corkinglogs
           content-type: application/json
       kafka:
         binder:

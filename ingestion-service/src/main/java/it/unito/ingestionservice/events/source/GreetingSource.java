@@ -1,6 +1,7 @@
 package it.unito.ingestionservice.events.source;
 
 import it.unito.ingestionservice.events.GreetingStreams;
+import it.unito.ingestionservice.events.model.CorkingLog;
 import it.unito.ingestionservice.events.model.Greeting;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +23,18 @@ public class GreetingSource {
     }
 
     public void sendGreeting(Greeting greeting) {
-        log.info("Invio del Messaggio: {} ", greeting);
+        log.info("Invio GREETING: {} ", greeting);
         MessageChannel messageChannel = greetingStreams.outboundGreetings();
         messageChannel.send(MessageBuilder.withPayload(greeting)
                 .setHeader(MessageHeaders.CONTENT_TYPE, MimeTypeUtils.APPLICATION_JSON)
                 .build());
     }
 
+    public void sendCorkingLog(CorkingLog corkingLog) {
+        log.info("Invio CORKING LOG: {} ", corkingLog);
+        MessageChannel messageChannel = greetingStreams.outBoundCorkingLogs();
+        messageChannel.send(MessageBuilder.withPayload(corkingLog)
+                .setHeader(MessageHeaders.CONTENT_TYPE, MimeTypeUtils.APPLICATION_JSON)
+                .build());
+    }
 }

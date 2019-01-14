@@ -1,7 +1,7 @@
 package it.unito.oeecomputationservice.events;
 
-import org.springframework.cloud.stream.annotation.Input;
-import org.springframework.messaging.SubscribableChannel;
+        import org.springframework.cloud.stream.annotation.Input;
+        import org.springframework.messaging.SubscribableChannel;
 
 /*
     Interfaccia che definisce i vari canali utilizzati dalla Spring Cloud Stream Application
@@ -9,8 +9,12 @@ import org.springframework.messaging.SubscribableChannel;
     il producer) su cui rivcevere i messaggi
  */
 public interface GreetingStreams {
-    String INPUT = "greetings-in";
+    String INPUT_GREETINGS = "greetings-in";
+    String INPUT_CORKINGLOGS = "corkinglogs-in";
 
-    @Input(INPUT)
+    @Input(INPUT_GREETINGS)
     SubscribableChannel inboundGreetings();
+    @Input(INPUT_CORKINGLOGS)
+    SubscribableChannel inboundCordkingLogs();
+
 }

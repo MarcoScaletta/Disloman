@@ -6,6 +6,10 @@ spring:
   cloud:
     stream:
       bindings:
+        corkinglogs-in:
+          destination: corkinglogs
+          content-type: application/json
+          group: oee-Computation-Group
         greetings-in:
           destination: greetings
           content-type: application/json

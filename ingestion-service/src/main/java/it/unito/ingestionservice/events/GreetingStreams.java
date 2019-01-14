@@ -9,8 +9,14 @@ import org.springframework.messaging.MessageChannel;
     il oeecomputationservice) su cui inviare i messaggi
  */
 public interface GreetingStreams {
-    String OUTPUT = "greetings-out";
+    String OUTPUT_GREETINGS = "greetings-out";
+    String OUTPUT_CORKINGLOG = "corkinglogs-out";
 
-    @Output(OUTPUT)
+    @Output(OUTPUT_GREETINGS)
     MessageChannel outboundGreetings();
+
+
+    @Output(OUTPUT_CORKINGLOG)
+    MessageChannel outBoundCorkingLogs();
+
 }

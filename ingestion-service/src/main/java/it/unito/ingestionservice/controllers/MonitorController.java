@@ -1,5 +1,6 @@
 package it.unito.ingestionservice.controllers;
 
+import it.unito.ingestionservice.events.model.CorkingLog;
 import it.unito.ingestionservice.events.model.Greeting;
 import it.unito.ingestionservice.events.source.GreetingSource;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +28,15 @@ public class MonitorController {
         greeting.setTimestamp(new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()));
         greetingSource.sendGreeting(greeting);
         return greeting;
+    }
+
+    @PostMapping("/corkinglogs")
+    public @ResponseBody
+    CorkingLog creaCorkingLog(@RequestBody CorkingLog corkingLog) {
+        log.info("Ricevuto nuovo dato da Orchestra! Aggiungo il timestamp!");
+        corkingLog.setInfo(new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()));
+        greetingSource.sendCorkingLog(corkingLog);
+        return corkingLog;
     }
 
 }
