@@ -50,3 +50,4 @@ zuul:
   routes:
     ingestion: '/api/orchestra/**'
     oee-computation: 'api/ssb/**'
+    cassandra-api: 'api/cassandra/**'
