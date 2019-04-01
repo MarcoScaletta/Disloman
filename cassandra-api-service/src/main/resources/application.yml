@@ -24,7 +24,7 @@ spring:
 #      database: disloman
 #      uri: mongodb://mongo:27017/
     cassandra:
-      keyspace-name: disloman
+      keyspace-name: procemsa
       port: 9042
       schema-action: create_if_not_exists
       contact-points: cassandra

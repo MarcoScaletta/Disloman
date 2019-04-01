@@ -1,0 +1,57 @@
+spring:
+  application:
+    name: scheduler
+#  datasource:
+#    url: jdbc:sqlserver://192.168.120.30:49718/
+
+  # Kafka Configurations
+  #  cloud:
+  #    stream:
+  #      bindings:
+  #        corkinglogs-in:
+  #          destination: corkinglogs
+  #          content-type: application/json
+  #          group: oee-Computation-Group
+  #        greetings-in:
+  #          destination: greetings
+  #          content-type: application/json
+  #          group: oee-Computation-Group
+  #      kafka:
+  #        binder:
+  #          brokers: kafka:9092
+
+  # Mongodb Configurations
+#  data:
+#    mongodb:
+#      database: disloman
+#      uri: mongodb://mongo:27017/
+#    cassandra:
+#      keyspace-name: disloman
+#      port: 9042
+#      schema-action: create_if_not_exists
+#      contact-points: cassandra
+
+
+# Spring Boot Actuator "/health" endpoint configuration (Mostra dettagli aggiuntivi quando si ispeziona /health endpoint)
+management:
+  endpoint:
+    health:
+      show-details: always
+
+# Spring Boot Actuator /info endpoint configuration (Informazioni customizzate da visualizzare quanto di ispeziona /info endpoint)
+info:
+  app:
+    name: Scheduler Service
+    description: Microservizio che si occupa di effettuare il caricamento dei dati nei DB!
+
+server:
+  port: 8080
+
+---
+spring:
+  profiles: compose
+
+---
+spring:
+  profiles: kub
+
