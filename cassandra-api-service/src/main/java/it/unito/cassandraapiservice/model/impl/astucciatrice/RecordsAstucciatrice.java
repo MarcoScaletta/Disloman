@@ -1,15 +1,15 @@
-package it.unito.cassandraapiservice.model.impl.records;
+package it.unito.cassandraapiservice.model.impl.astucciatrice;
 
+import lombok.Builder;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.cassandra.core.mapping.Column;
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
-import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
+import org.springframework.data.cassandra.core.mapping.Table;
 
-import java.sql.Time;
-
+@Builder
 @Data
-public class RecordsGeneric {
+@Table(value = "records_astucciatrice")
+public class RecordsAstucciatrice{
 
     @PrimaryKey("time")
     private final String time;

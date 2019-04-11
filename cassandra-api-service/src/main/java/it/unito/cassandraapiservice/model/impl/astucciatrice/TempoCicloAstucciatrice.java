@@ -1,12 +1,15 @@
-package it.unito.cassandraapiservice.model.impl.prodottotempo;
+package it.unito.cassandraapiservice.model.impl.astucciatrice;
 
+import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.cassandra.core.mapping.Column;
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
+import org.springframework.data.cassandra.core.mapping.Table;
 
+@Builder
 @Data
-public class TempoCicloProdotto {
-
+@Table(value = "tempo_ciclo_astucciatrice")
+public class TempoCicloAstucciatrice {
     @PrimaryKey("codice_prodotto")
     private String codiceProdotto;
 
@@ -15,5 +18,4 @@ public class TempoCicloProdotto {
 
     @Column("contatore")
     private int contatore;
-
 }
