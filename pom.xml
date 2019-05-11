@@ -28,7 +28,7 @@
 		<module>zuul-service</module>
 		<module>ingestion-service</module>
 		<module>oee-computation-service</module>
-        <module>scheduler-service</module>
+		<module>scheduler-service</module>
     </modules>
 
 	<distributionManagement>
