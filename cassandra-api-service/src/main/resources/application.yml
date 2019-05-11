@@ -2,6 +2,7 @@ spring:
   application:
     name: cassandra-api
 
+
 # Kafka Configurations
 #  cloud:
 #    stream:

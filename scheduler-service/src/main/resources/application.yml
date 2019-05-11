@@ -1,8 +1,16 @@
 spring:
   application:
     name: scheduler
-#  datasource:
-#    url: jdbc:sqlserver://192.168.120.30:49718/
+  datasource:
+    driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    url: jdbc:sqlserver://;serverName=192.168.120.30;port=49718;databaseName=master
+    username: Orchestra
+    password: Password2019
+
+#  jpa:
+#    show-sql: true
+  #    password: insert password here
+
 
   # Kafka Configurations
   #  cloud:
@@ -45,7 +53,7 @@ info:
     description: Microservizio che si occupa di effettuare il caricamento dei dati nei DB!
 
 server:
-  port: 8080
+  port: 8090
 
 ---
 spring:
