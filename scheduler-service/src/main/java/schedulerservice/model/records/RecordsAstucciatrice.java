@@ -1,10 +1,20 @@
 package schedulerservice.model.records;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
-public class RecordsAstucciatrice extends RecordsGeneric{
-    public RecordsAstucciatrice(String time) {
-        super(time);
-    }
+@AllArgsConstructor
+@NoArgsConstructor
+@Setter
+@Getter
+public class RecordsAstucciatrice {
+
+    private String time;
+
+    private int pezziProdotti;
+
+    private String codiceProdotto;
+
 }
