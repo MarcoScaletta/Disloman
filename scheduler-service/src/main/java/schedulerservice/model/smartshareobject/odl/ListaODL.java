@@ -1,12 +1,11 @@
-package schedulerservice.model.smartshareobject;
+package schedulerservice.model.smartshareobject.odl;
 
 import lombok.Getter;
-import lombok.Setter;
 import java.util.List;
 
-@Setter
 @Getter
 public class ListaODL {
+
     List<ODL> lista_odl;
 
     @Override

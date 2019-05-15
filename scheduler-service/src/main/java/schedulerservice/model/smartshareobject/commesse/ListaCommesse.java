@@ -1,10 +1,9 @@
-package schedulerservice.model.smartshareobject;
+package schedulerservice.model.smartshareobject.commesse;
 
 import lombok.Getter;
-import lombok.Setter;
+
 import java.util.List;
 
-@Setter
 @Getter
 public class ListaCommesse {
     List<Commessa> lista_commesse;

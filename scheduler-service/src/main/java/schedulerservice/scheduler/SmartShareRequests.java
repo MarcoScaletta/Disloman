@@ -1,14 +1,17 @@
 package schedulerservice.scheduler;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-import schedulerservice.model.smartshareobject.ListaCommesse;
-import schedulerservice.model.smartshareobject.ListaODL;
+import schedulerservice.model.smartshareobject.commesse.ListaCommesse;
+import schedulerservice.model.smartshareobject.odl.fasi.ListaFasi;
+import schedulerservice.model.smartshareobject.odl.ListaODL;
 
+@Slf4j
 @Component
 public class SmartShareRequests {
 
@@ -20,22 +23,6 @@ public class SmartShareRequests {
 
     @Autowired
     public String smartshareAddress;
-
-    public SmartShareRequests(){
-    }
-
-    public Object getObject(String path, Class<?> c){
-        ResponseEntity<?> response = restTemplate.exchange(
-                smartshareAddress + path,
-                HttpMethod.GET,
-                httpEntitySmartShare,c);
-        return response.getBody();
-
-    }
-
-//    public ListaCommesse getListaCommesse1(){
-//        ListaCommesse
-//    }
 
     public ListaCommesse getListaCommesse(){
         ResponseEntity<ListaCommesse> response = restTemplate.exchange(
@@ -50,6 +37,15 @@ public class SmartShareRequests {
                 smartshareAddress + "/odl/",
                 HttpMethod.GET,
                 httpEntitySmartShare,ListaODL.class);
+
+        return response.getBody();
+    }
+
+    public ListaFasi getListaFasi(String odlCode){
+        ResponseEntity<ListaFasi> response = restTemplate.exchange(
+                smartshareAddress + "/odl/"+odlCode+"/fasi/",
+                HttpMethod.GET,
+                httpEntitySmartShare,ListaFasi.class);
         return response.getBody();
     }
 

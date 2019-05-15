@@ -17,7 +17,7 @@ import schedulerservice.scheduler.SmartShareRequests;
 import javax.sql.DataSource;
 
 @EnableScheduling
-@SpringBootApplication(scanBasePackages={"schedulerservice.scheduler"})
+@SpringBootApplication
 @Slf4j@Component
 public class SchedulerServiceApplication {
 
