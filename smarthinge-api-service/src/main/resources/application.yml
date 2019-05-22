@@ -20,7 +20,7 @@ info:
     description: Microservizio che fornisce le API per accedere al DB SmartHinge!
 
 server:
-  port: 8080
+  port: 8081
 
 ---
 spring:

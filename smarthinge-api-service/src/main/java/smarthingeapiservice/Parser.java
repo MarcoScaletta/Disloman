@@ -1,4 +1,4 @@
-package schedulerservice;
+package smarthingeapiservice;
 
 import java.util.HashMap;
 import java.util.regex.Matcher;
@@ -8,7 +8,7 @@ public class Parser {
 
     private final HashMap<String, String> map;
 
-    public Parser(String [] dataIDs,String[]regexes) throws Exception {
+    public Parser(String [] dataIDs, String[]regexes) throws Exception {
         if(dataIDs.length != regexes.length)
             throw new Exception("Data Ids and Regexes must have same lenght");
         map = new HashMap<>();
