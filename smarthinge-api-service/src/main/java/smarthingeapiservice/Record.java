@@ -13,5 +13,4 @@ public class Record {
 
     private int pezziProdotti;
 
-    private String codiceProdotto;
 }
