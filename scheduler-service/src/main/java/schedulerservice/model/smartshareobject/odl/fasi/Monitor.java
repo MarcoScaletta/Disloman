@@ -9,9 +9,9 @@ public class Monitor {
     @JsonProperty("cod_monitor")
     private String codMonitor;
     @JsonProperty("timestamp_start_fase")
-    private int timeStart;
+    private String timeStart;
     @JsonProperty("timestamp_stop_fase")
-    private int timeStop;
+    private String timeStop;
 
     @Override
     public String toString() {
