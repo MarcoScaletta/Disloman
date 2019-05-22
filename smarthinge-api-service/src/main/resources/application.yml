@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: scheduler
+  datasource:
+    driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    url: jdbc:sqlserver://;serverName=192.168.120.30;port=49718;databaseName=master
+    username: Orchestra
+    password: Password2019
+
+# Spring Boot Actuator "/health" endpoint configuration (Mostra dettagli aggiuntivi quando si ispeziona /health endpoint)
+management:
+  endpoint:
+    health:
+      show-details: always
+
+# Spring Boot Actuator /info endpoint configuration (Informazioni customizzate da visualizzare quanto di ispeziona /info endpoint)
+info:
+  app:
+    name: SmartHinge API Service
+    description: Microservizio che fornisce le API per accedere al DB SmartHinge!
+
+server:
+  port: 8080
+
+---
+spring:
+  profiles: compose
+
+---
+spring:
+  profiles: kub
+
