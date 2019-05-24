@@ -8,8 +8,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public class Monitor {
 
-    @JsonProperty("cod_monitor")
-    private String codMonitor;
     @JsonProperty("timestamp_start_fase")
     private String timeStart;
     @JsonProperty("timestamp_stop_fase")
@@ -18,7 +16,8 @@ public class Monitor {
     @Override
     public String toString() {
         return "Monitor{" +
-                "codMonitor='" + codMonitor + '\'' +
+                "timeStart='" + timeStart + '\'' +
+                ", timeStop='" + timeStop + '\'' +
                 '}';
     }
 }

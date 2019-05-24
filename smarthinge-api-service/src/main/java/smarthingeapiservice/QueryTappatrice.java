@@ -63,7 +63,7 @@ public class QueryTappatrice {
                 int i=0;
                 while (rs.next()) {
                     String time = rs.getString("ts_srv");
-                    records.add(new Record(time,0,"null_cod"));
+                    records.add(new Record(time,0));
 //                String msg = rs.getString("msgin");
 //                String di12 = parser.findVal("DI12",msg);
 //                String di13 = parser.findVal("DI13",msg);
