@@ -1,7 +1,6 @@
 package it.unito.cassandraapiservice.controller;
 
 import it.unito.cassandraapiservice.model.impl.smartshareobjects.Monitor;
-import it.unito.cassandraapiservice.model.impl.tappatrice.RecordsTappatrice;
 import it.unito.cassandraapiservice.model.repository.MonitorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
