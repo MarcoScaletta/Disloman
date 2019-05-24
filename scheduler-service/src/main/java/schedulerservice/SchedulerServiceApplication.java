@@ -14,7 +14,7 @@ import schedulerservice.scheduler.CassandraRequests;
 import schedulerservice.scheduler.SmartShareRequests;
 
 @EnableScheduling
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "schedulerservice")
 @Slf4j@Component
 public class SchedulerServiceApplication {
 
@@ -27,15 +27,20 @@ public class SchedulerServiceApplication {
 	}
 
 	@Bean
-	@Scope(value = "singleton")
 	public RestTemplate restTemplate(){
 		return new RestTemplate();
 	}
 
 	@Bean
 	@Scope(value = "singleton")
-	public String smartshareAddress(){
+	public String smartshareAPIAddress(){
 		return "http://192.168.120.30:9000";
+	}
+
+	@Bean
+	@Scope(value = "singleton")
+	public String smartHingeAPIServiceAddress(){
+		return "http://smarthinge-api:8081";
 	}
 
 	@Bean

@@ -22,11 +22,11 @@ public class SmartShareRequests {
     private RestTemplate restTemplate;
 
     @Autowired
-    public String smartshareAddress;
+    public String smartshareAPIAddress;
 
     public ListaCommesse getListaCommesse(){
         ResponseEntity<ListaCommesse> response = restTemplate.exchange(
-                smartshareAddress + "/commesse/",
+                smartshareAPIAddress + "/commesse/",
                 HttpMethod.GET,
                 httpEntitySmartShare,ListaCommesse.class);
         return response.getBody();
@@ -34,7 +34,7 @@ public class SmartShareRequests {
 
     public ListaODL getListaODL(){
         ResponseEntity<ListaODL> response = restTemplate.exchange(
-                smartshareAddress + "/odl/",
+                smartshareAPIAddress + "/odl/",
                 HttpMethod.GET,
                 httpEntitySmartShare,ListaODL.class);
 
@@ -43,7 +43,7 @@ public class SmartShareRequests {
 
     public ListaFasi getListaFasi(String odlCode){
         ResponseEntity<ListaFasi> response = restTemplate.exchange(
-                smartshareAddress + "/odl/"+odlCode+"/fasi/",
+                smartshareAPIAddress + "/odl/"+odlCode+"/fasi/",
                 HttpMethod.GET,
                 httpEntitySmartShare,ListaFasi.class);
         return response.getBody();

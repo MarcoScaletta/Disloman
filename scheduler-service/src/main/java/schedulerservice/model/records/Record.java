@@ -1,5 +1,6 @@
 package schedulerservice.model.records;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Setter
 @Getter
-public class RecordsAstucciatrice {
+public class Record {
 
     private String time;
 
@@ -17,4 +18,12 @@ public class RecordsAstucciatrice {
 
     private String codiceProdotto;
 
+    @Override
+    public String toString() {
+        return "Record{" +
+                "time='" + time + '\'' +
+                ", pezziProdotti=" + pezziProdotti +
+                ", codiceProdotto='" + codiceProdotto + '\'' +
+                '}';
+    }
 }

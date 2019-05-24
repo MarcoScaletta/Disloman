@@ -1,14 +1,19 @@
 package schedulerservice.scheduler;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-import schedulerservice.model.records.RecordsTappatrice;
+import schedulerservice.model.records.Record;
+import schedulerservice.model.smartshareobject.odl.fasi.Monitor;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.util.List;
 
+@Slf4j
 @Component
 public class CassandraRequests {
 
@@ -21,18 +26,58 @@ public class CassandraRequests {
     @Autowired
     private RestTemplate restTemplate;
 
-    public void postTappatriceRecord(RecordsTappatrice record){
+    public void postTappatriceRecord(Record record){
         HttpEntity<?>  entity = new HttpEntity<>(record);
         restTemplate.postForObject(
                 cassandraAPIServiceAddress + tappatriceRecordsTableName,
-                entity, RecordsTappatrice.class);
+                entity, Record.class);
     }
 
-    public void testPostTappatriceRecord(){
+    public void postMonitor(Monitor monitor){
+        try{
+        HttpEntity<?>  entity = new HttpEntity<>(monitor);
+        log.info(cassandraAPIServiceAddress +"/monitor/");
+        restTemplate.postForObject(
+                cassandraAPIServiceAddress + "/monitor/",
+                entity, Monitor.class);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
-        String s = DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(LocalDateTime.now());
-        RecordsTappatrice r = new RecordsTappatrice(s,1,"1");
-        postTappatriceRecord(r);
+//    public void postFase(ODL odl){
+//        HttpEntity<?>  entity = new HttpEntity<>(odl);
+//        log.info(cassandraAPIServiceAddress +"/odl/");
+//        restTemplate.postForObject(
+//                cassandraAPIServiceAddress + "/odl/",
+//                entity, ODL.class);
+//    }
+//
+//    public void postODL(ODL odl){
+//        HttpEntity<?>  entity = new HttpEntity<>(odl);
+//        log.info(cassandraAPIServiceAddress +"/odl/");
+//        restTemplate.postForObject(
+//                cassandraAPIServiceAddress + "/odl/",
+//                entity, ODL.class);
+//    }
+//
+//    public void testPostMonitor(){
+//
+//        String s = DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(LocalDateTime.now());
+//        Monitor m = new Monitor(s,"0","0");
+//        postMonitor(m);
+//    }
+
+
+    public List<Monitor> getSavedMonitors(){
+    ResponseEntity<List<Monitor>> response = new RestTemplate().exchange(
+            cassandraAPIServiceAddress +"/monitor",
+            HttpMethod.GET,
+            null,new ParameterizedTypeReference<List<Monitor>>(){});
+
+        log.info(response.getBody().toString());
+        return response.getBody();
+
     }
 
 }
