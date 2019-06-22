@@ -17,14 +17,43 @@ import javax.sql.DataSource;
 @Component
 public class SmartHingeAPIServiceApplication {
 
-    private String tappatriceCode = "PRCS-AS-5";
-    private String tappatriceOutputCode = "DIC11";
+    private String bilanciaCode = "PRCS-AS-5";
+    private String bilanciaOutputCode = "DIC11";
+
+    private String incartonatriceCode = "PRCS-AS-5";
+    private String incartonatriceOutputCode = "DIC15";
+
+    private String tappatriceCode = "PRCS-AS-6";
+    private String tappatriceOutputCode = "DIC01";
+
+    private String etichettatriceCode = "PRCS-AS-7";
+    private String etichettatriceOutputCode = "DIC05";
+
 
     @Bean
-    @Scope
+    @Scope(value = "singleton")
+    public QueryMachine queryBilancia(){
+        return new QueryMachine(bilanciaCode, bilanciaOutputCode);
+    }
+
+    @Bean
+    @Scope(value = "singleton")
+    public QueryMachine queryIncartonatrice(){
+        return new QueryMachine(incartonatriceCode, incartonatriceOutputCode);
+    }
+
+    @Bean
+    @Scope(value = "singleton")
     public QueryMachine queryTappatrice(){
         return new QueryMachine(tappatriceCode, tappatriceOutputCode);
     }
+
+    @Bean
+    @Scope(value = "singleton")
+    public QueryMachine queryEtichettatrice(){
+        return new QueryMachine(etichettatriceCode, etichettatriceOutputCode);
+    }
+
 
     @Bean
     @Scope(value = "singleton")
