@@ -3,7 +3,7 @@ spring:
     name: scheduler
   datasource:
     driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
-    url: jdbc:sqlserver://;serverName=192.168.120.30;port=49718;databaseName=master
+    url: jdbc:sqlserver://;serverName=192.168.120.30;port=1433;databaseName=master
     username: Orchestra
     password: Password2019
 

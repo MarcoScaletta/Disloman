@@ -17,10 +17,13 @@ import javax.sql.DataSource;
 @Component
 public class SmartHingeAPIServiceApplication {
 
+    private String tappatriceCode = "PRCS-AS-5";
+    private String tappatriceOutputCode = "DIC11";
+
     @Bean
     @Scope
-    public QueryTappatrice queryTappatrice(){
-        return new QueryTappatrice();
+    public QueryMachine queryTappatrice(){
+        return new QueryMachine(tappatriceCode, tappatriceOutputCode);
     }
 
     @Bean
@@ -29,7 +32,7 @@ public class SmartHingeAPIServiceApplication {
         DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
         dataSourceBuilder.driverClassName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
         dataSourceBuilder.url(
-                "jdbc:sqlserver://;serverName=192.168.120.30;port=49718;databaseName=ORC_roh_ODM");
+                "jdbc:sqlserver://;serverName=192.168.120.30;port=1433;databaseName=ORC_roh_ODM");
         dataSourceBuilder.username("Orchestra");
         dataSourceBuilder.password("Password2019");
         return dataSourceBuilder.build();
