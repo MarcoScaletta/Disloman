@@ -40,7 +40,6 @@ public class QueryMachine {
     @SuppressWarnings("Duplicates")
     public List<Record> queryToMachine(Timestamp startTime, Timestamp stopTime) {
         List<Record> records = new ArrayList<>();
-        System.out.println("START: " + startTime + " END:"+stopTime);
         try {
             int stringSize;
             Connection conn = datasource.getConnection();
@@ -50,10 +49,13 @@ public class QueryMachine {
             pstmt.setTimestamp(3, stopTime);
             pstmt.setString(4, outputCode);
 
-            log.info("Executing query: ");
+            log.info("Executing query on " + machineCode);
+            log.info("START: "  + startTime);
+            log.info("END  : "   + stopTime);
+            System.out.println(pstmt.toString());
 
             ResultSet rs = pstmt.executeQuery();
-            System.out.print("RECORD LETTI:            ");
+            System.out.print("\t\tRECORD LETTI:            0");
             String backspace;
             while (rs.next()) {
                 backspace = "";
@@ -74,7 +76,7 @@ public class QueryMachine {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        log.info("Numero totale di record estratti " + records.size() );
+        log.info("Numero totale di record estratti " + records.size() +"\n" );
         return records;
     }
 }

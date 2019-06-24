@@ -38,25 +38,25 @@ public class RecordController {
 
     @GetMapping("/records_bilancia/monitor")
     public ResponseEntity<List<Record>> getBilanciaRecords(@RequestParam String start, @RequestParam String stop) {
-        log.info("GET BILANCIA_RECORDS: from <" + start +"> to <"+stop+">");
+        log.info("GET BILANCIA_RECORDS");
         return getGenericRecords(queryBilancia, start, stop);
     }
 
     @GetMapping("/records_incartonatrice/monitor")
     public ResponseEntity<List<Record>> getIncartonatriceRecords(@RequestParam String start, @RequestParam String stop) {
-        log.info("GET INCARTONATRICE_RECORDS: from <" + start +"> to <"+stop+">");
+        log.info("GET INCARTONATRICE_RECORDS");
         return getGenericRecords(queryIncartonatrice, start, stop);
     }
 
     @GetMapping("/records_tappatrice/monitor")
     public ResponseEntity<List<Record>> getTappatriceRecords(@RequestParam String start, @RequestParam String stop) {
-        log.info("GET TAPPATRICE_RECORDS: from <" + start +"> to <"+stop+">");
+        log.info("GET TAPPATRICE_RECORDS");
         return getGenericRecords(queryTappatrice, start, stop);
     }
 
     @GetMapping("/records_etichettatrice/monitor")
     public ResponseEntity<List<Record>> getEtichettatriceRecords(@RequestParam String start, @RequestParam String stop) {
-        log.info("GET ETICHETTATRICE_RECORDS: from <" + start +"> to <"+stop+">");
+        log.info("GET ETICHETTATRICE_RECORDS");
         return getGenericRecords(queryEtichettatrice, start, stop);
     }
 
