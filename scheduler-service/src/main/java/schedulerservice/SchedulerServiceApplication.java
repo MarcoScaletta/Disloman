@@ -34,9 +34,7 @@ public class SchedulerServiceApplication {
 	public HttpEntity<String> httpEntitySmartShare(){
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Access-token",
-				"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9." +
-						"eyJzdWIiOiJ1bml0byIsImlzcyI6Ik9yY2hlc3RyYVNybCJ9." +
-						"SQMEYQzkcku0H9oKt3hUET018BwUPGJLOT-dBfz5OOM");
+				"");
 		return new HttpEntity<>(null, headers);
 	}
 
