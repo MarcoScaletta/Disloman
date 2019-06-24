@@ -6,8 +6,12 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import schedulerservice.model.records.Record;
 import schedulerservice.model.smartshareobject.odl.fasi.Monitor;
+import schedulerservice.requestsapi.CassandraRequests;
+import schedulerservice.requestsapi.SmartHingeRequests;
+import schedulerservice.requestsapi.SmartShareRequests;
 
-import java.util.ArrayList;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 @Slf4j
@@ -20,7 +24,6 @@ public class Scheduler {
     @Autowired
     private CassandraRequests cassandraRequests;
 
-
     @Autowired
     private SmartHingeRequests smartHingeRequests;
 
@@ -28,57 +31,39 @@ public class Scheduler {
     @Scheduled(fixedRate = 5000, initialDelay = 5000)
     @Autowired
     @SuppressWarnings("Duplicates")
-    public void t(){
-        Monitor m1 = new Monitor(
-                "1",
-                "2019-05-22 06:30:00",
-                "2019-05-22 07:00:00");
-        Monitor m2 = new Monitor(
-                "2",
-                "2019-05-22 07:01:00",
-                "2019-05-22 07:30:00");
-        Monitor m3 = new Monitor(
-                "3",
-                "2019-05-22 07:31:00",
-                "2019-05-22 08:00:00");
-        List<Monitor> monitors = new ArrayList<>();
-        monitors.add(m1);
-        monitors.add(m2);
-        monitors.add(m3);
-//
-        saveRecords("null_cod",filterMonitor(monitors));
+    public void t() throws ParseException {
+        Monitor myMonitor = new Monitor(
+                "mon_week_17_21_june",
+                new SimpleDateFormat("yyyy-MM-dd hh:mm").parse("2019-06-17 00:00").getTime() + "",
+                new SimpleDateFormat("yyyy-MM-dd hh:mm").parse("2019-06-22 00:00").getTime() + "",
+                "odl_week_17_21_june");
+        saveRecords(myMonitor);
         System.exit(0);
-//
-//        saveRecords("null_cod",m1);
-//        System.exit(0);
-
-//        for (Commessa c : s.getListaCommesse().getLista_commesse())
-//            log.info(c.toString());
-//        List<ODL> l = s.getListaODL().getLista_odl();
-//        for (ODL c : s.getListaODL().getLista_odl()){
-//            log.info("In " + c.toString());
-//            for (Fase f : s.getListaFasi(c.getCodODL()).getListaFasi()){
-//                log.info("  FASE  :"+ f.getCodFase());
-//                log.info("  ATTIVA:"+ f.isActive());
-//                for(ProdottoLavorato p : f.getListaProdottiLavorati())
-//                    log.info("    ->"+ p.getCodProdotto());
-//            }
-//
-//        }
-    }
-    public void saveRecords(String cod_prodotto, List<Monitor> allMonitor){
-        for (Monitor m : allMonitor)
-            saveRecords(cod_prodotto, m);
-
     }
 
-    public void saveRecords(String cod_prodotto, Monitor monitor){
-        List<Record> records = smartHingeRequests.getRecords(monitor);
-        for(Record r : records){
-            r.setCodiceProdotto(cod_prodotto);
-            cassandraRequests.postTappatriceRecord(r);
-        }
+    public void saveRecords(Monitor monitor){
+        List<Record> recordsTappatrice = smartHingeRequests.getTappatriceRecord(monitor);
+        List<Record> recordsEtichettatrice= smartHingeRequests.getEtichettatriceRecord(monitor);
+        List<Record> recordsIncartonatrice = smartHingeRequests.getIncartonatriceRecord(monitor);
+        List<Record> recordsBilancia = smartHingeRequests.getBilanciaRecord(monitor);
+
+        addProdCodeSaveRecords(recordsTappatrice, monitor.getCodODL());
+        addProdCodeSaveRecords(recordsEtichettatrice, monitor.getCodODL());
+        addProdCodeSaveRecords(recordsIncartonatrice, monitor.getCodODL());
+        addProdCodeSaveRecords(recordsBilancia, monitor.getCodODL());
+
+        cassandraRequests.postRecordsTappatrice(recordsTappatrice);
+        cassandraRequests.postRecordsEtichettatrice(recordsEtichettatrice);
+        cassandraRequests.postRecordsIncartonatrice(recordsIncartonatrice);
+        cassandraRequests.postRecordsBilancia(recordsBilancia);
+
         cassandraRequests.postMonitor(monitor);
+    }
+
+    private void addProdCodeSaveRecords(List<Record> records, String prodCode){
+        for(Record r : records)
+            r.setCodiceProdotto(prodCode);
+
     }
 
     public List<Monitor> filterMonitor(List<Monitor> monitors){

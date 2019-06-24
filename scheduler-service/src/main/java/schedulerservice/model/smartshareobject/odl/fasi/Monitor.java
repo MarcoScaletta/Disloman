@@ -20,6 +20,9 @@ public class Monitor {
     private String timeStart;
     @JsonProperty("timestamp_stop_fase")
     private String timeStop;
+    @JsonProperty("cod_odl")
+    private String codODL;
+
 
     @Override
     public boolean equals(Object o) {

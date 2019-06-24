@@ -1,4 +1,4 @@
-package schedulerservice.scheduler;
+package schedulerservice.requestsapi;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +10,7 @@ import org.springframework.web.client.RestTemplate;
 import schedulerservice.model.smartshareobject.commesse.ListaCommesse;
 import schedulerservice.model.smartshareobject.odl.fasi.ListaFasi;
 import schedulerservice.model.smartshareobject.odl.ListaODL;
+import schedulerservice.model.smartshareobject.odl.fasi.ListaMonitor;
 
 @Slf4j
 @Component
@@ -38,6 +39,14 @@ public class SmartShareRequests {
                 HttpMethod.GET,
                 httpEntitySmartShare,ListaODL.class);
 
+        return response.getBody();
+    }
+
+    public ListaMonitor getListaMonitor(){
+        ResponseEntity<ListaMonitor> response = restTemplate.exchange(
+                smartshareAPIAddress + "/monitor/",
+                HttpMethod.GET,
+                httpEntitySmartShare,ListaMonitor.class);
         return response.getBody();
     }
 

@@ -1,17 +1,28 @@
 package schedulerservice;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustStrategy;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-import schedulerservice.scheduler.CassandraRequests;
-import schedulerservice.scheduler.SmartShareRequests;
+import schedulerservice.requestsapi.CassandraRequests;
+import schedulerservice.requestsapi.SmartShareRequests;
+
+import javax.net.ssl.SSLContext;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
 
 @EnableScheduling
 @SpringBootApplication(scanBasePackages = "schedulerservice")
@@ -22,19 +33,50 @@ public class SchedulerServiceApplication {
 	@Scope(value = "singleton")
 	public HttpEntity<String> httpEntitySmartShare(){
 		HttpHeaders headers = new HttpHeaders();
-		headers.set("Access-token", "fgjyu8s6-1020-11e9-ab14-d663bd873d93");
+		headers.set("Access-token",
+				"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9." +
+						"eyJzdWIiOiJ1bml0byIsImlzcyI6Ik9yY2hlc3RyYVNybCJ9." +
+						"SQMEYQzkcku0H9oKt3hUET018BwUPGJLOT-dBfz5OOM");
 		return new HttpEntity<>(null, headers);
 	}
 
 	@Bean
 	public RestTemplate restTemplate(){
-		return new RestTemplate();
+		TrustStrategy acceptingTrustStrategy = (X509Certificate[] chain, String authType) -> true;
+
+		SSLContext sslContext = null;
+		try {
+			sslContext = org.apache.http.ssl.SSLContexts.custom()
+					.loadTrustMaterial(null, acceptingTrustStrategy)
+					.build();
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		} catch (KeyManagementException e) {
+			e.printStackTrace();
+		} catch (KeyStoreException e) {
+			e.printStackTrace();
+		}
+
+		SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(sslContext);
+
+		CloseableHttpClient httpClient = HttpClients.custom()
+				.setSSLSocketFactory(csf)
+				.build();
+
+		HttpComponentsClientHttpRequestFactory requestFactory =
+				new HttpComponentsClientHttpRequestFactory();
+
+		requestFactory.setHttpClient(httpClient);
+
+		RestTemplate restTemplate = new RestTemplate(requestFactory);
+
+		return restTemplate;
 	}
 
 	@Bean
 	@Scope(value = "singleton")
 	public String smartshareAPIAddress(){
-		return "http://192.168.120.30:9000";
+		return "https://localhost:9000";
 	}
 
 	@Bean
@@ -55,10 +97,16 @@ public class SchedulerServiceApplication {
         return "records_tappatrice";
     }
 
+	@Bean
+	@Scope(value = "singleton")
+	public String incartonatriceRecordsTableName(){
+		return "records_incartonatrice";
+	}
+
     @Bean
     @Scope(value = "singleton")
-    public String astucciatriceRecordsTableName(){
-        return "records_astucciatrice";
+    public String bilanciaRecordsTableName(){
+        return "records_bilancia";
     }
 
     @Bean
@@ -82,6 +130,7 @@ public class SchedulerServiceApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SchedulerServiceApplication.class, args);
 	}
+
 
 }
 

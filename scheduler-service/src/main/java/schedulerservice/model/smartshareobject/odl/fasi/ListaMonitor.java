@@ -7,6 +7,6 @@ import java.util.List;
 
 @Getter
 public class ListaMonitor {
-//    @JsonProperty("inserted_monitor")
+    @JsonProperty("lista_monitor")
     public List<Monitor> listaMonitor;
 }

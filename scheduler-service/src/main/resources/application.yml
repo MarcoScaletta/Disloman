@@ -25,3 +25,5 @@ spring:
 spring:
   profiles: kub
 
+security:
+  require-ssl: false
