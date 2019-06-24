@@ -8,7 +8,7 @@ import org.springframework.data.cassandra.core.mapping.Table;
 
 @Builder
 @Data
-@Table(value = "records_astucciatrice")
+@Table(value = "records_incartonatrice")
 public class RecordsIncartonatrice {
 
     @PrimaryKey("time")
