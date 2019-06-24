@@ -3,6 +3,7 @@ package smarthingeapiservice;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,44 +33,45 @@ public class RecordController {
     @Qualifier("queryEtichettatrice")
     QueryMachine queryEtichettatrice;
 
-    private SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+    private SimpleDateFormat completeFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+
 
     @GetMapping("/records_bilancia/monitor")
-    public List<Record> getBilanciaRecords(@RequestParam String start, @RequestParam String stop)
-            throws ParseException {
+    public ResponseEntity<List<Record>> getBilanciaRecords(@RequestParam String start, @RequestParam String stop) {
         log.info("GET BILANCIA_RECORDS: from <" + start +"> to <"+stop+">");
         return getGenericRecords(queryBilancia, start, stop);
     }
 
     @GetMapping("/records_incartonatrice/monitor")
-    public List<Record> getIncartonatriceRecords(@RequestParam String start, @RequestParam String stop)
-            throws ParseException {
+    public ResponseEntity<List<Record>> getIncartonatriceRecords(@RequestParam String start, @RequestParam String stop) {
         log.info("GET INCARTONATRICE_RECORDS: from <" + start +"> to <"+stop+">");
         return getGenericRecords(queryIncartonatrice, start, stop);
     }
 
     @GetMapping("/records_tappatrice/monitor")
-    public List<Record> getTappatriceRecords(@RequestParam String start, @RequestParam String stop)
-            throws ParseException {
+    public ResponseEntity<List<Record>> getTappatriceRecords(@RequestParam String start, @RequestParam String stop) {
         log.info("GET TAPPATRICE_RECORDS: from <" + start +"> to <"+stop+">");
         return getGenericRecords(queryTappatrice, start, stop);
     }
 
     @GetMapping("/records_etichettatrice/monitor")
-    public List<Record> getEtichettatriceRecords(@RequestParam String start, @RequestParam String stop)
-            throws ParseException {
+    public ResponseEntity<List<Record>> getEtichettatriceRecords(@RequestParam String start, @RequestParam String stop) {
         log.info("GET ETICHETTATRICE_RECORDS: from <" + start +"> to <"+stop+">");
         return getGenericRecords(queryEtichettatrice, start, stop);
     }
 
-    private List<Record> getGenericRecords(QueryMachine query, String start, String stop)
-            throws ParseException {
+    private ResponseEntity<List<Record>> getGenericRecords(QueryMachine query, String start, String stop) {
+
         Timestamp startTime,stopTime;
+        try{
 
-        startTime = new Timestamp(sdf1.parse(start).getTime());
-        stopTime  = new Timestamp(sdf1.parse(stop).getTime());
+            startTime = new Timestamp(completeFormat.parse(start).getTime());
+            stopTime  = new Timestamp(completeFormat.parse(stop).getTime());
+        }catch (ParseException p){
+            log.info("Wrong date format");
+            return ResponseEntity.status(400).body(null);
+        }
 
-        return query.queryToMachine(startTime,stopTime);
-
+        return ResponseEntity.ok(query.queryToMachine(startTime,stopTime));
     }
 }
