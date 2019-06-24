@@ -1,4 +1,4 @@
-package it.unito.cassandraapiservice.model.impl.astucciatrice;
+package it.unito.cassandraapiservice.model.impl.bilancia;
 
 import lombok.Builder;
 import lombok.Data;
@@ -9,8 +9,9 @@ import java.io.Serializable;
 
 @Builder
 @Data
-@Table(value = "risultati_astucciatrice")
-public class RisultatiAstucciatrice {
+@Table(value = "risultati_bilancia")
+public class RisultatiBilancia {
+
 
     @PrimaryKey
     PropertyKey key;
@@ -43,6 +44,7 @@ public class RisultatiAstucciatrice {
         @PrimaryKeyColumn(name = "tempo",
                 type = PrimaryKeyType.CLUSTERED)
         private String tempo;
+
         @Override
         public String toString(){
             return data+"_"+tempo;

@@ -9,7 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-public class RecordsTappatriceController {
+public class TappatriceController {
+
     @Autowired
     RecordsTappatriceRepository repository;
 
@@ -23,14 +24,16 @@ public class RecordsTappatriceController {
     }
 
     @PostMapping("/records_tappatrice")
-    public RecordsTappatrice addRecord(@RequestBody RecordsTappatrice recordsTappatrice)
-    {
-        repository.save(recordsTappatrice);
-        return recordsTappatrice;
+    public List<RecordsTappatrice> addRecords(
+            @RequestBody List<RecordsTappatrice> records){
+        for (RecordsTappatrice r : records)
+            repository.save(r);
+        return records;
     }
 
 
-    @DeleteMapping(value = "/records_tappatrice/{id}", produces = "application/json; charset=utf-8")
+    @DeleteMapping(value = "/records_tappatrice/{id}",
+            produces = "application/json; charset=utf-8")
     public String deleteRecord(@PathVariable String id) {
         boolean result = repository.existsById(id);
         repository.deleteById(id);

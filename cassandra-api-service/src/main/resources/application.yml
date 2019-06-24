@@ -27,7 +27,7 @@ spring:
     cassandra:
       keyspace-name: procemsa
       port: 9042
-      schema-action: create_if_not_exists
+      schema-action: recreate_drop_unused
       contact-points: cassandra
 
 

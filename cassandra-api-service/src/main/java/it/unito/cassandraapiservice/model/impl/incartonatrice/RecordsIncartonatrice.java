@@ -1,4 +1,4 @@
-package it.unito.cassandraapiservice.model.impl.astucciatrice;
+package it.unito.cassandraapiservice.model.impl.incartonatrice;
 
 import lombok.Builder;
 import lombok.Data;
@@ -9,7 +9,7 @@ import org.springframework.data.cassandra.core.mapping.Table;
 @Builder
 @Data
 @Table(value = "records_astucciatrice")
-public class RecordsAstucciatrice{
+public class RecordsIncartonatrice {
 
     @PrimaryKey("time")
     private final String time;
