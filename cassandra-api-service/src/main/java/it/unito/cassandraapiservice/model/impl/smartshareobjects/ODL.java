@@ -6,7 +6,7 @@ import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
 
 @Data
-@Table(value = "inserted_Closed_ODL")
+//@Table(value = "inserted_Closed_ODL")
 public class ODL {
 
     @JsonProperty("cod_odl")

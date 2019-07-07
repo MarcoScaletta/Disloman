@@ -1,21 +1,12 @@
 package it.unito.cassandraapiservice.model.impl.incartonatrice;
 
-import lombok.Builder;
+import it.unito.cassandraapiservice.model.impl.generic.TempoCiclo;
 import lombok.Data;
-import org.springframework.data.cassandra.core.mapping.Column;
-import org.springframework.data.cassandra.core.mapping.PrimaryKey;
+import lombok.EqualsAndHashCode;
 import org.springframework.data.cassandra.core.mapping.Table;
 
-@Builder
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Table(value = "tempo_ciclo_incartonatrice")
-public class TempoCicloIncartonatrice {
-    @PrimaryKey("codice_prodotto")
-    private String codiceProdotto;
-
-    @Column("timestamp")
-    private final String timestamp;
-
-    @Column("contatore")
-    private int contatore;
+public class TempoCicloIncartonatrice extends TempoCiclo {
 }

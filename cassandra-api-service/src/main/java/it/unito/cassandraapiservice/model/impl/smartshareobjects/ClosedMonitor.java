@@ -7,11 +7,11 @@ import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
 
 @Data
-//@Table(value = "inserted_closed_fase")
-public class Fase {
+//@Table(value = "closed_monitor")
+public class ClosedMonitor {
 
-    @JsonProperty("cod_fase")
-    @PrimaryKey("cod_fase")
-    private String codFase;
+    @JsonProperty("cod_monitor")
+    @PrimaryKey("cod_monitor")
+    private String codMonitor;
 
 }
