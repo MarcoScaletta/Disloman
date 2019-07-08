@@ -1,4 +1,4 @@
-package it.unito.cassandraapiservice.model.repository;
+package it.unito.cassandraapiservice.model.repository.bilancia;
 
 import it.unito.cassandraapiservice.model.impl.bilancia.RecordsBilancia;
 import org.springframework.data.repository.CrudRepository;
