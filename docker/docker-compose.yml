@@ -8,89 +8,18 @@ services:
       SPRING_PROFILES_ACTIVE: "compose"
     ports:
       - 8080:8080
-
-  zookeeper:
-    image: "drugotosto84/kafka:2.0.0"
-    container_name: zookeeper
+  cassandra:
+    container_name: cassandra
+    image: cassandra
     ports:
-      - 2181:2181
-    entrypoint:
-    - ./bin/zookeeper-server-start.sh
-    command:
-    - ./config/zookeeper.properties
-
-  kafka:
-    image: "drugotosto84/kafka:2.0.0"
-    container_name: kafka
-    ports:
-      - 9092:9092
-    links:
-      - zookeeper
-    entrypoint: ./bin/kafka-server-start.sh
-    command:
-      - config/server.properties
-      - --override
-      -   zookeeper.connect=zookeeper:2181
-      - --override
-      -   broker.id=0
-      # unlike Kubernetes StatefulSet, compose gives containers a random hostname (leading to redirects to a hex name)
-      - --override
-      -   advertised.listener=PLAINTEXT://kafka:9092
-
-#  kafka_manager:
-#    image: "solsson/kafka-manager"
-#    container_name: kafkamanager
-#    ports:
-#      - 9000:9000
-#    links:
-#      - kafka
-#    environment:
-#      ZK_HOSTS: "zookeeper:2181"
-
-  mongo:
-    image: "mongo:4"
-    container_name: mongo
-    restart: on-failure
-    ports:
-      - 27017:27017
+      - 9042:9042
     volumes:
-      - mongodb_data:/data/db
-      - mongodb_config:/data/configdb
-    command:
-      - "mongod"
-      - "--port"
-      - "27017"
-      - "--bind_ip"
-      - "0.0.0.0"
-      - "--dbpath"
-      - "/data/db"
+      - '~/Scrivania/inputCassandra:/var/lib/cassandra'
 
-  mongo-express:
-    image: "mongo-express:0.49"
-    container_name: mongo-express-container
-    restart: on-failure
-    ports:
-      - 8081:8081
-#    environment:
-#      ME_CONFIG_MONGODB_ADMINUSERNAME: root
-#      ME_CONFIG_MONGODB_ADMINPASSWORD: example
-
-  ingestion:
-    image: "marcoscaletta/ingestion-service:1.0.0-SNAPSHOT"
-    container_name: ingestion
+  cassandra-api:
+    image: "marcoscaletta/cassandra-api-service:1.0.0-SNAPSHOT"
+    container_name: cassandra-api
     environment:
       SPRING_PROFILES_ACTIVE: "compose"
     ports:
       - 8085:8080
-
-  oee-comutation:
-    image: "marcoscaletta/oee-computation-service:1.0.0-SNAPSHOT"
-    container_name: oee-comutation
-    environment:
-      SPRING_PROFILES_ACTIVE: "compose"
-    ports:
-      - 8090:8080
-
-volumes:
-  mongodb_data:
-  mongodb_config:
