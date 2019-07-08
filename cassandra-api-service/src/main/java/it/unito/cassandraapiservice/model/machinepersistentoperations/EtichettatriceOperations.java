@@ -55,7 +55,8 @@ public class EtichettatriceOperations implements GenericMachineOperations {
 
     @Override
     public RisultatiCommessaList getRisultatiCommessa(String codiceCommessa) {
-        Iterable<RisultatiCommessaEtichettatrice> result = risultatiCommessaEtichettatriceRepository.findAll();
+        Iterable<RisultatiCommessaEtichettatrice> result =
+                risultatiCommessaEtichettatriceRepository.findByCommessa(codiceCommessa);
         RisultatiCommessaList risultatiCommessaList = new RisultatiCommessaList();
         result.forEach(risultatiCommessaList.getRisultatiCommessaList()::add);
         return risultatiCommessaList;

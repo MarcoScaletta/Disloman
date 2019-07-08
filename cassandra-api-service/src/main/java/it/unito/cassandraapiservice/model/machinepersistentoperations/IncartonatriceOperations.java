@@ -55,7 +55,8 @@ public class IncartonatriceOperations implements GenericMachineOperations {
 
     @Override
     public RisultatiCommessaList getRisultatiCommessa(String codiceCommessa) {
-        Iterable<RisultatiCommessaIncartonatrice> result = risultatiCommessaIncartonatriceRepository.findAll();
+        Iterable<RisultatiCommessaIncartonatrice> result =
+                risultatiCommessaIncartonatriceRepository.findByCommessa(codiceCommessa);
         RisultatiCommessaList risultatiCommessaList = new RisultatiCommessaList();
         result.forEach(risultatiCommessaList.getRisultatiCommessaList()::add);
         return risultatiCommessaList;

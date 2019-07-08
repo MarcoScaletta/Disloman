@@ -55,7 +55,8 @@ public class TappatriceOperations implements GenericMachineOperations {
 
     @Override
     public RisultatiCommessaList getRisultatiCommessa(String codiceCommessa) {
-        Iterable<RisultatiCommessaTappatrice> result = risultatiCommessaTappatriceRepository.findAll();
+        Iterable<RisultatiCommessaTappatrice> result =
+                risultatiCommessaTappatriceRepository.findByCommessa(codiceCommessa);
         RisultatiCommessaList risultatiCommessaList = new RisultatiCommessaList();
         result.forEach(risultatiCommessaList.getRisultatiCommessaList()::add);
         return risultatiCommessaList;
