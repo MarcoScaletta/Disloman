@@ -54,7 +54,7 @@ public class GenericMachineController {
 
     // EXTERNAL API
 
-    @GetMapping("api/ssb/risultati/{macchina}/")
+    @GetMapping("api/risultati/{macchina}/")
     public RisultatiList getRisultati(@PathVariable String macchina){
         GenericMachineOperations machineOperations = getMachineOperations(macchina);
         if (machineOperations == null)
@@ -62,7 +62,7 @@ public class GenericMachineController {
         return machineOperations.getRisultati();
     }
 
-    @GetMapping("api/ssb/risultati_commessa/{macchina}/commessa/{commessa}/")
+    @GetMapping("api/risultati_commessa/{macchina}/{commessa}/")
     public RisultatiCommessaList getRisultatiCommessa(
             @PathVariable String macchina,
             @PathVariable String commessa){
@@ -72,7 +72,7 @@ public class GenericMachineController {
         return machineOperations.getRisultatiCommessa(commessa);
     }
 
-    @GetMapping("api/ssb/risultati_commessa_turno/{macchina}/{commessa}/{turno}/")
+    @GetMapping("api/risultati_commessa_turno/{macchina}/{commessa}/{turno}/")
     public RisultatiCommessaTurnoList getRisultatiCommessaTurno(
             @PathVariable String macchina,
             @PathVariable String commessa,
@@ -83,7 +83,7 @@ public class GenericMachineController {
         return machineOperations.getRisultatiCommessaTurno(commessa, turno);
     }
 
-    @GetMapping("api/ssb/risultati_odl_turno/{macchina}/{odl}/{turno}/")
+    @GetMapping("api/risultati_odl_turno/{macchina}/{odl}/{turno}/")
     public RisultatiODLTurnoList getRisultatiODLTurno(
             @PathVariable String macchina,
             @PathVariable String odl,
