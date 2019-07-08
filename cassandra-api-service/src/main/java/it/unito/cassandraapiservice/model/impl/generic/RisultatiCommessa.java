@@ -42,13 +42,13 @@ public class RisultatiCommessa {
     @Builder
     private static class PropertyKey implements Serializable {
 
-        @PrimaryKeyColumn(name = "codice_commessa",
-                type = PrimaryKeyType.CLUSTERED)
-        private String codiceCommessa;
-
         @PrimaryKeyColumn(name = "codice_prodotto",
                 type = PrimaryKeyType.PARTITIONED)
         private String codiceProdotto;
+
+        @PrimaryKeyColumn(name = "codice_commessa",
+                type = PrimaryKeyType.CLUSTERED)
+        private String codiceCommessa;
 
     }
 

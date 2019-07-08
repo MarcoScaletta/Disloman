@@ -1,4 +1,4 @@
-package it.unito.cassandraapiservice.model.impl.tappatrice;
+package it.unito.cassandraapiservice.model.impl.incartonatrice;
 
 import it.unito.cassandraapiservice.model.impl.generic.RisultatiODLTurno;
 import lombok.Data;
@@ -7,7 +7,6 @@ import org.springframework.data.cassandra.core.mapping.Table;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-@Table(value = "risultati_tappatrice_odl_turno")
-public class RisultatiTappatriceODLTurno extends RisultatiODLTurno {
+@Table(value = "risultati_incartonatrice_odl_turno")
+public class RisultatiODLTurnoIncartonatrice extends RisultatiODLTurno {
 }
-

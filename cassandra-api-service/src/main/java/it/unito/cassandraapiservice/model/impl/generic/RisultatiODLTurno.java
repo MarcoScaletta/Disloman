@@ -33,7 +33,7 @@ public class RisultatiODLTurno {
     private static class PropertyKey implements Serializable {
 
         @PrimaryKeyColumn(name = "codice_odl",
-                type = PrimaryKeyType.CLUSTERED)
+                type = PrimaryKeyType.PARTITIONED)
         private String codiceODL;
 
         @PrimaryKeyColumn(name = "codice_prodotto",
@@ -41,7 +41,7 @@ public class RisultatiODLTurno {
         private String codiceProdotto;
 
         @PrimaryKeyColumn(name = "data",
-                type = PrimaryKeyType.PARTITIONED)
+                type = PrimaryKeyType.CLUSTERED)
         private String data;
 
         @PrimaryKeyColumn(name = "turno",

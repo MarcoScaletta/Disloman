@@ -8,5 +8,5 @@ import org.springframework.data.cassandra.core.mapping.Table;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Table(value = "risultati_etichettatrice_odl_turno")
-public class RisultatiEtichettatriceODLTurno extends RisultatiODLTurno {
+public class RisultatiODLTurnoEtichettatrice extends RisultatiODLTurno {
 }

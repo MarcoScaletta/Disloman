@@ -2,13 +2,18 @@ package it.unito.cassandraapiservice.controller;
 
 
 import it.unito.cassandraapiservice.model.apiobjects.*;
+import it.unito.cassandraapiservice.model.impl.realtime.RealTime;
 import it.unito.cassandraapiservice.model.machinepersistentoperations.BilanciaOperations;
 import it.unito.cassandraapiservice.model.machinepersistentoperations.EtichettatriceOperations;
 import it.unito.cassandraapiservice.model.machinepersistentoperations.IncartonatriceOperations;
 import it.unito.cassandraapiservice.model.machinepersistentoperations.TappatriceOperations;
+import it.unito.cassandraapiservice.model.repository.RealTimeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -25,6 +30,9 @@ public class GenericMachineController {
 
     @Autowired
     BilanciaOperations bilanciaOperations;
+
+    @Autowired
+    RealTimeRepository realTimeRepository;
 
 
     @GetMapping("/api/ssb/")
@@ -92,6 +100,14 @@ public class GenericMachineController {
         if (machineOperations == null)
             return null;
         return machineOperations.getRisultatiODLTurno(odl, turno);
+    }
+
+    @GetMapping("api/real_time/")
+    public List<RealTime> getRealTime(){
+        Iterable<RealTime> result = realTimeRepository.findAll();
+        List<RealTime> realTimes = new ArrayList<>();
+        result.forEach(realTimes::add);
+        return realTimes;
     }
 
 
