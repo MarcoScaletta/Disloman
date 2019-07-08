@@ -1,5 +1,6 @@
 package it.unito.cassandraapiservice.model.impl.generic;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
@@ -9,9 +10,8 @@ import java.io.Serializable;
 
 public class Risultati extends GenericRecord{
 
-    @JsonProperty("key")
     @PrimaryKey
-    PropertyKey key;
+    private PropertyKey key;
 
     @JsonProperty("timestamp")
     @Column("timestamp")
@@ -30,12 +30,10 @@ public class Risultati extends GenericRecord{
     @Builder
     public static class PropertyKey implements Serializable {
 
-        @JsonProperty("data")
         @PrimaryKeyColumn(name = "data",
                 type = PrimaryKeyType.PARTITIONED)
         private String data;
 
-        @JsonProperty("orario")
         @PrimaryKeyColumn(name = "orario",
                 type = PrimaryKeyType.CLUSTERED)
         private String orario;
@@ -44,5 +42,15 @@ public class Risultati extends GenericRecord{
         public String toString(){
             return data+"_"+orario;
         }
+    }
+
+    @JsonGetter("data")
+    public String getData(){
+        return key.data;
+    }
+
+    @JsonGetter("orario")
+    public String getOrario(){
+        return key.orario;
     }
 }

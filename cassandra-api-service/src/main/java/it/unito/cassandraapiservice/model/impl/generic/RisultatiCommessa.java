@@ -1,7 +1,9 @@
 package it.unito.cassandraapiservice.model.impl.generic;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import lombok.Builder;
 import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
 import org.springframework.data.cassandra.core.mapping.Column;
@@ -15,9 +17,8 @@ public class RisultatiCommessa {
 
     public static final String WHERECONDITION = " WHERE codice_commessa=?0 ALLOW FILTERING ";
 
-    @JsonProperty("key")
     @PrimaryKey
-    PropertyKey key;
+    private PropertyKey key;
 
     @JsonProperty("data_inizio")
     @Column("data_inizio")
@@ -41,21 +42,22 @@ public class RisultatiCommessa {
     @Builder
     private static class PropertyKey implements Serializable {
 
-        @JsonProperty("codice_commessa")
         @PrimaryKeyColumn(name = "codice_commessa",
                 type = PrimaryKeyType.CLUSTERED)
         private String codiceCommessa;
 
-        @JsonProperty("codice_prodotto")
         @PrimaryKeyColumn(name = "codice_prodotto",
                 type = PrimaryKeyType.PARTITIONED)
         private String codiceProdotto;
 
     }
 
-    public  static String query(String nomeMacchina){
-        return "SELECT * FROM risultati_" +
-                "bilancia_" + nomeMacchina + " " +
-                "WHERE codice_commessa=?0 turno=?1 ALLOW FILTERING";
+    @JsonGetter("codice_commessa")
+    public String getCodiceCommessa(){
+        return key.codiceCommessa;
+    }
+    @JsonGetter("codice_prodotto")
+    public String getCodiceProdotto(){
+        return key.codiceProdotto;
     }
 }
