@@ -8,10 +8,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import schedulerservice.model.records.Record;
-import schedulerservice.model.smartshareobject.odl.fasi.Monitor;
+import schedulerservice.model.smartshareobject.Monitor;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -33,6 +34,24 @@ public class SmartHingeRequests {
     @Autowired
     public String smartHingeAPIServiceAddress;
 
+    public List<Record> getTappatriceRecord(Date start, Date stop){
+        return getRecords(start, stop, tappatriceRecordsTableName);
+    }
+
+    public List<Record> getEtichettatriceRecord(Date start, Date stop){
+        return getRecords(start, stop, etichettatriceRecordsTableName);
+    }
+
+    public List<Record> getIncartonatriceRecord(Date start, Date stop){
+        return getRecords(start, stop, incartonatriceRecordsTableName);
+    }
+
+    public List<Record> getBilanciaRecord(Date start, Date stop){
+
+        return getRecords(start, stop, bilanciaRecordsTableName);
+    }
+
+
     public List<Record> getTappatriceRecord(Monitor monitor){
         return getRecords(monitor, tappatriceRecordsTableName);
     }
@@ -51,7 +70,7 @@ public class SmartHingeRequests {
 
     public List<Record> getRecords(Monitor monitor,String urlMachine){
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
         ResponseEntity<List<Record>> response = new RestTemplate().exchange(
                 smartHingeAPIServiceAddress + "/" + urlMachine +
@@ -62,6 +81,22 @@ public class SmartHingeRequests {
                 HttpMethod.GET,
                 null,new ParameterizedTypeReference<List<Record>>(){});
 
+        if(response.getBody() != null)
+            log.info("Dimensione dati ottenuti per [" + urlMachine + "] : " + response.getBody().size());
+        return response.getBody();
+    }
+
+    public List<Record> getRecords(Date start, Date stop, String urlMachine){
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        ResponseEntity<List<Record>> response = new RestTemplate().exchange(
+                smartHingeAPIServiceAddress + "/" + urlMachine +
+                        "/monitor?start="+
+                        sdf.format(start)+
+                        "&stop="+
+                        sdf.format(stop),
+                HttpMethod.GET,
+                null,new ParameterizedTypeReference<List<Record>>(){});
         if(response.getBody() != null)
             log.info("Dimensione dati ottenuti per [" + urlMachine + "] : " + response.getBody().size());
         return response.getBody();

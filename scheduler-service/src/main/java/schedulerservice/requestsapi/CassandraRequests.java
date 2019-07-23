@@ -8,8 +8,10 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+import schedulerservice.model.cassandraobjects.OpenMonitor;
+import schedulerservice.model.cassandraobjects.RecordsList;
 import schedulerservice.model.records.Record;
-import schedulerservice.model.smartshareobject.odl.fasi.Monitor;
+import schedulerservice.model.smartshareobject.Monitor;
 
 import java.util.List;
 
@@ -38,60 +40,84 @@ public class CassandraRequests {
 
     // REST API CALL RECORD METHODS
 
-    public void postRecords(List<Record> records, String table){
+    public void postRecords(RecordsList records, String machine){
+        System.out.println("PRINTING TEST: " + cassandraAPIServiceAddress + "/" + machine);
         HttpEntity<?>  entity = new HttpEntity<>(records);
         restTemplate.exchange(
-                cassandraAPIServiceAddress + "/" + table,
+                cassandraAPIServiceAddress + "/records/" + machine+"/",
                 HttpMethod.POST,
                 entity,
-                new ParameterizedTypeReference<List<Record>>(){});
-        System.out.println("PRINTING TEST: " + cassandraAPIServiceAddress + "/" + table);
+                RecordsList.class);
     }
 
-    public void postRecordsTappatrice(List<Record> records){
-        System.out.println("postRecordsTappatrice");
-
-        postRecords(records, tappatriceRecordsTableName);
+    public void postRecordsTappatrice(RecordsList records){
+        postRecords(records, "tappatrice");
     }
 
-    public void postRecordsEtichettatrice(List<Record> records){
-        System.out.println("postRecordsTappatrice");
-        postRecords(records, etichettatriceRecordsTableName);
+    public void postRecordsEtichettatrice(RecordsList records){
+        postRecords(records, "etichettatrice");
     }
 
-    public void postRecordsIncartonatrice(List<Record> records){
-        System.out.println("postRecordsTappatrice");
-        postRecords(records, incartonatriceRecordsTableName);
+    public void postRecordsIncartonatrice(RecordsList records){
+        postRecords(records, "incartonatrice");
     }
 
-    public void postRecordsBilancia(List<Record> records){
-        System.out.println("postRecordsTappatrice");
-        postRecords(records, bilanciaRecordsTableName);
+    public void postRecordsBilancia(RecordsList records){
+        postRecords(records, "bilancia");
     }
 
 
-    // MONITOR METHODS
+    // CLOSED MONITOR METHODS
     public void postMonitor(Monitor monitor){
         try{
             HttpEntity<?>  entity = new HttpEntity<>(monitor);
-            log.info(cassandraAPIServiceAddress +"/monitor/");
+            log.info(cassandraAPIServiceAddress +"/closed-monitor/");
             restTemplate.postForObject(
-                    cassandraAPIServiceAddress + "/monitor/",
+                    cassandraAPIServiceAddress + "/closed-monitor/",
                     entity, Monitor.class);
         }catch (Exception e){
             e.printStackTrace();
         }
     }
 
-    public List<Monitor> getSavedMonitors(){
+    public List<Monitor> getClosedMonitors(){
         ResponseEntity<List<Monitor>> response = new RestTemplate().exchange(
-                cassandraAPIServiceAddress +"/monitor",
+                cassandraAPIServiceAddress +"/closed-monitor",
                 HttpMethod.GET,
                 null,new ParameterizedTypeReference<List<Monitor>>(){});
 
-        log.info(response.getBody().toString());
         return response.getBody();
 
+    }
+
+    // OPEN MONITOR METHODS
+    public void postOpenMonitor(OpenMonitor monitor){
+        try{
+            HttpEntity<?>  entity = new HttpEntity<>(monitor);
+            log.info(cassandraAPIServiceAddress +"/open-monitor/");
+            restTemplate.postForObject(
+                    cassandraAPIServiceAddress + "/open-monitor/",
+                    entity, Monitor.class);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public OpenMonitor getOpenMonitor(){
+        ResponseEntity<OpenMonitor> response = new RestTemplate().exchange(
+                cassandraAPIServiceAddress +"/open-monitor/",
+                HttpMethod.GET,
+                null,OpenMonitor.class);
+        return response.getBody();
+    }
+
+    public OpenMonitor deleteOpenMonitor(String codMonitor){
+        ResponseEntity<OpenMonitor> response = new RestTemplate().exchange(
+                cassandraAPIServiceAddress
+                        +"/open-monitor/"+codMonitor+"/",
+                HttpMethod.DELETE,
+                null,OpenMonitor.class);
+        return response.getBody();
     }
 
 }

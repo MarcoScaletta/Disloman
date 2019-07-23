@@ -7,10 +7,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-import schedulerservice.model.smartshareobject.commesse.ListaCommesse;
-import schedulerservice.model.smartshareobject.odl.fasi.ListaFasi;
-import schedulerservice.model.smartshareobject.odl.ListaODL;
-import schedulerservice.model.smartshareobject.odl.fasi.ListaMonitor;
+import schedulerservice.model.smartshareobject.*;
 
 @Slf4j
 @Component
@@ -25,13 +22,7 @@ public class SmartShareRequests {
     @Autowired
     public String smartshareAPIAddress;
 
-    public ListaCommesse getListaCommesse(){
-        ResponseEntity<ListaCommesse> response = restTemplate.exchange(
-                smartshareAPIAddress + "/commesse/",
-                HttpMethod.GET,
-                httpEntitySmartShare,ListaCommesse.class);
-        return response.getBody();
-    }
+
 
     public ListaODL getListaODL(){
         ResponseEntity<ListaODL> response = restTemplate.exchange(
@@ -49,6 +40,44 @@ public class SmartShareRequests {
                 httpEntitySmartShare,ListaMonitor.class);
         return response.getBody();
     }
+
+    public Monitor getMonitor(String codMonitor){
+        ResponseEntity<Monitor> response = restTemplate.exchange(
+                smartshareAPIAddress + "/monitor/"+codMonitor,
+                HttpMethod.GET,
+                httpEntitySmartShare,Monitor.class);
+        return response.getBody();
+    }
+
+    public Fase getSingleFase(String codODL, String codFase){
+        ResponseEntity<Fase> response = restTemplate.exchange(
+                smartshareAPIAddress +
+                        "/odl/" +
+                        codODL+
+                        "/fasi/"+
+                        codFase,
+                HttpMethod.GET,
+                httpEntitySmartShare,Fase.class);
+        return response.getBody();
+    }
+
+//    public ODL getSingleODL(String codODL){
+//        ResponseEntity<ODL> response = restTemplate.exchange(
+//                smartshareAPIAddress +
+//                        "/odl/" +
+//                        codODL,
+//                HttpMethod.GET,
+//                httpEntitySmartShare,ODL.class);
+//        return response.getBody();
+//    }
+
+//    public ListaFasi getListaFasi(){
+//        ResponseEntity<ListaFasi> response = restTemplate.exchange(
+//                smartshareAPIAddress + "/odl/" +"/fasi/",
+//                HttpMethod.GET,
+//                httpEntitySmartShare,ListaFasi.class);
+//        return response.getBody();
+//    }
 
     public ListaFasi getListaFasi(String odlCode){
         ResponseEntity<ListaFasi> response = restTemplate.exchange(
