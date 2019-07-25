@@ -33,7 +33,7 @@ public class RecordController {
     @Qualifier("queryEtichettatrice")
     QueryMachine queryEtichettatrice;
 
-    private SimpleDateFormat completeFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+    private SimpleDateFormat completeFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
 
     @GetMapping("/records_bilancia/monitor")
