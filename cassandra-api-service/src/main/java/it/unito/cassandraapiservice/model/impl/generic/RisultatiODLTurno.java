@@ -14,7 +14,7 @@ import java.io.Serializable;
 
 public class RisultatiODLTurno {
 
-    public static final String WHERECONDITION = " WHERE codice_odl=?0 AND turno=?1 ALLOW FILTERING ";
+    public static final String WHERECONDITION = " WHERE codice_odl=?0 ALLOW FILTERING ";
 
     @PrimaryKey
     private PropertyKey key;

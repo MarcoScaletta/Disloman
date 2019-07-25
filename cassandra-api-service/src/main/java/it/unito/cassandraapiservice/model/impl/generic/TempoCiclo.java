@@ -17,4 +17,9 @@ public class TempoCiclo{
     @JsonProperty("contatore")
     @Column("contatore")
     private int contatore;
+
+
+    @JsonProperty("tempo_ciclo")
+    @Column("tempo_ciclo")
+    private float tempoCiclo;
 }

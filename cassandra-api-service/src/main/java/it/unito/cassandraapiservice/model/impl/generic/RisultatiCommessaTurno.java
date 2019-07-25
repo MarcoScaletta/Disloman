@@ -14,7 +14,7 @@ import java.io.Serializable;
 
 public class RisultatiCommessaTurno {
 
-    public static final String WHERECONDITION = " WHERE codice_commessa=?0 AND turno=?1 ALLOW FILTERING ";
+    public static final String WHERECONDITION = " WHERE codice_commessa=?0 ALLOW FILTERING ";
 
     @PrimaryKey
     private PropertyKey key;
