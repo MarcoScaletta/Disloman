@@ -11,11 +11,6 @@ import java.util.List;
 @Slf4j
 public class QueryMachine {
 
-    // il parametro 1 e' il codice della macchina
-    // il parametro 2 e' la data d'inizio
-    // il parametro 3 e' la data di fine
-    // il parametro 4 e' il codice del sensore per il conteggio
-
     private String select = "SELECT OAMT.ASS_MSTR_TRACE_time [TIME]," +
             "OAMT.ASS_MSTR_TRACE_value [VAR_VALUE] " +
             "FROM ORC_roh_ODM.dbo.ORC_ASSET_MASTER_TRACING [OAMT] " +
@@ -23,7 +18,7 @@ public class QueryMachine {
             "JOIN ORC_roh_ODM.dbo.ORC_ASSET_GROUP_PARAM [OAGP] ON OAGP.ASS_GR_PARAM_id = " +
             "OAMT.ASS_GR_PARAM_id " +
             "WHERE OAM.ASS_MASTR_code = ? " +
-            "AND OAMT.ASS_MSTR_TRACE_time >= ? AND OAMT.ASS_MSTR_TRACE_time < ? AND OAGP.ASS_GR_PARAM_desc = ?";
+            "AND OAMT.ASS_MSTR_TRACE_time >= ? AND OAMT.ASS_MSTR_TRACE_time < ? AND OAGP.ASS_GR_PARAM_desc = ? ";
 
     private final String machineCode;
 
@@ -33,9 +28,8 @@ public class QueryMachine {
         this.machineCode = machineCode;
         this.outputCode = outputCode;
     }
-
     @Autowired
-    DataSource datasource;
+    private DataSource datasource;
 
     @SuppressWarnings("Duplicates")
     public List<Record> queryToMachine(Timestamp startTime, Timestamp stopTime) {
