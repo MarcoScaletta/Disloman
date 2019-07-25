@@ -1,21 +1,27 @@
 package it.unito.cassandraapiservice.model.impl.generic;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.cassandra.core.mapping.Column;
 
 public class GenericRecord {
 
+    @JsonProperty("nome_prodotto")
     @Column("nome_prodotto")
-    private String nomeProdotto;
+    protected String nomeProdotto;
 
+    @JsonProperty("codice_prodotto")
     @Column("codice_prodotto")
-    private String codiceProdotto;
+    protected String codiceProdotto;
 
+    @JsonProperty("codice_commessa")
     @Column("codice_commessa")
-    private String codiceCommessa;
+    protected String codiceCommessa;
 
+    @JsonProperty("turno")
     @Column("turno")
-    private String turno;
+    protected String turno;
 
+    @JsonProperty("codice_odl")
     @Column("codice_odl")
-    private String cod_odl;
+    protected String cod_odl;
 }
