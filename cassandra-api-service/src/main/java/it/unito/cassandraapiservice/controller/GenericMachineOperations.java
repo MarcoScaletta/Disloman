@@ -14,8 +14,8 @@ public interface GenericMachineOperations {
 
     RisultatiCommessaList getRisultatiCommessa(String codiceCommessa);
 
-    RisultatiCommessaTurnoList getRisultatiCommessaTurno(String codiceCommessa, String turno);
+    RisultatiCommessaTurnoList getRisultatiCommessaTurno(String codiceCommessa);
 
-    RisultatiODLTurnoList getRisultatiODLTurno(String codiceODL, String turno);
+    RisultatiODLTurnoList getRisultatiODLTurno(String codiceODL);
 
 }
