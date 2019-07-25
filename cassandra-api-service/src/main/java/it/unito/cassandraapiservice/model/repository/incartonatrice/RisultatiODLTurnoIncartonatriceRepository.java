@@ -12,7 +12,5 @@ public interface RisultatiODLTurnoIncartonatriceRepository
         extends CrudRepository<RisultatiODLTurnoIncartonatrice, String> {
 
     @Query("SELECT * FROM risultati_incartonatrice_odl_turno " + RisultatiODLTurno.WHERECONDITION)
-    List<RisultatiODLTurnoIncartonatrice> findByODLAndCommessa(
-            @Param("odl") String odl,
-            @Param("turno") String turno);
+    List<RisultatiODLTurnoIncartonatrice> findByODL(@Param("odl") String odl);
 }

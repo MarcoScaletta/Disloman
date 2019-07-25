@@ -12,7 +12,5 @@ public interface RisultatiODLTurnoEtichettatriceRepository
         extends CrudRepository<RisultatiODLTurnoEtichettatrice, String> {
 
     @Query("SELECT * FROM risultati_etichettatrice_odl_turno " + RisultatiODLTurno.WHERECONDITION)
-    List<RisultatiODLTurnoEtichettatrice> findByODLAndCommessa(
-            @Param("odl") String odl,
-            @Param("turno") String turno);
+    List<RisultatiODLTurnoEtichettatrice> findByODL(@Param("odl") String odl);
 }

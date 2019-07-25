@@ -12,8 +12,6 @@ public interface RisultatiODLTurnoBilanciaRepository
         extends CrudRepository<RisultatiODLTurnoBilancia, String> {
 
     @Query("SELECT * FROM risultati_bilancia_odl_turno " + RisultatiODLTurno.WHERECONDITION)
-    List<RisultatiODLTurnoBilancia> findByODLAndCommessa(
-            @Param("odl") String odl,
-            @Param("turno") String turno);
+    List<RisultatiODLTurnoBilancia> findByODL(@Param("odl") String odl);
 
 }

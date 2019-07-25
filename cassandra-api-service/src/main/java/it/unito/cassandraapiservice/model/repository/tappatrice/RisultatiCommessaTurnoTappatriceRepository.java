@@ -12,7 +12,5 @@ public interface RisultatiCommessaTurnoTappatriceRepository
         extends CrudRepository<RisultatiCommessaTurnoTappatrice, String> {
 
     @Query("SELECT * FROM risultati_tappatrice_commessa_turno " + RisultatiCommessaTurno.WHERECONDITION)
-    List<RisultatiCommessaTurnoTappatrice> findByCommessaAndTurno(
-            @Param("commessa") String commessa,
-            @Param("turno") String turno);
+    List<RisultatiCommessaTurnoTappatrice> findByCommessa(@Param("commessa") String commessa);
 }

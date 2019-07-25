@@ -12,7 +12,5 @@ public interface RisultatiCommessaTurnoEtichettatriceRepository
         extends CrudRepository<RisultatiCommessaTurnoEtichettatrice, String> {
 
     @Query("SELECT * FROM risultati_etichettatrice_commessa_turno " + RisultatiCommessaTurno.WHERECONDITION)
-    List<RisultatiCommessaTurnoEtichettatrice> findByCommessaAndTurno(
-            @Param("commessa") String commessa,
-            @Param("turno") String turno);
+    List<RisultatiCommessaTurnoEtichettatrice> findByCommessa(@Param("commessa") String commessa);
 }

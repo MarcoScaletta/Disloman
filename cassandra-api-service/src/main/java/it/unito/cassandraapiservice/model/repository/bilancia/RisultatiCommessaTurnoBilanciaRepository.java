@@ -12,7 +12,5 @@ public interface RisultatiCommessaTurnoBilanciaRepository
         extends CrudRepository<RisultatiCommessaTurnoBilancia, String> {
 
     @Query("SELECT * FROM risultati_bilancia_commessa_turno " + RisultatiCommessaTurno.WHERECONDITION)
-    List<RisultatiCommessaTurnoBilancia> findByCommessaAndTurno(
-            @Param("commessa") String commessa,
-            @Param("turno") String turno);
+    List<RisultatiCommessaTurnoBilancia> findByCommessa(@Param("commessa") String commessa);
 }

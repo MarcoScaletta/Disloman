@@ -12,7 +12,5 @@ public interface RisultatiODLTurnoTappatriceRepository
         extends CrudRepository<RisultatiODLTurnoTappatrice, String> {
 
     @Query("SELECT * FROM risultati_tappatrice_odl_turno " + RisultatiODLTurno.WHERECONDITION)
-    List<RisultatiODLTurnoTappatrice> findByODLAndCommessa(
-            @Param("odl") String odl,
-            @Param("turno") String turno);
+    List<RisultatiODLTurnoTappatrice> findByODL(@Param("odl") String odl);
 }

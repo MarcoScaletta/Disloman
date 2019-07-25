@@ -12,7 +12,5 @@ public interface RisultatiCommessaTurnoIncartonatriceRepository
         extends CrudRepository<RisultatiCommessaTurnoIncartonatrice, String> {
 
     @Query("SELECT * FROM risultati_incartonatrice_commessa_turno " + RisultatiCommessaTurno.WHERECONDITION)
-    List<RisultatiCommessaTurnoIncartonatrice> findByCommessaAndTurno(
-            @Param("commessa") String commessa,
-            @Param("turno") String turno);
+    List<RisultatiCommessaTurnoIncartonatrice> findByCommessa(@Param("commessa") String commessa);
 }
