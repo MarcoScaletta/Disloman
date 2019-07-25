@@ -35,7 +35,7 @@ public class IncartonatriceOperations implements GenericMachineOperations {
 
     public RecordsList addRecords(RecordsList recordsList){
         for (Records r : recordsList.getRecordsList())
-            repository.save((RecordsIncartonatrice) r);
+            repository.save(new RecordsIncartonatrice(r));
         return recordsList;
     }
 
@@ -63,18 +63,18 @@ public class IncartonatriceOperations implements GenericMachineOperations {
     }
 
     @Override
-    public RisultatiCommessaTurnoList getRisultatiCommessaTurno(String codiceCommessa, String turno) {
+    public RisultatiCommessaTurnoList getRisultatiCommessaTurno(String codiceCommessa) {
         Iterable<RisultatiCommessaTurnoIncartonatrice> result
-                = risultatiCommessaTurnoIncartonatriceRepository.findByCommessaAndTurno(codiceCommessa, turno);
+                = risultatiCommessaTurnoIncartonatriceRepository.findByCommessa(codiceCommessa);
         RisultatiCommessaTurnoList risultatiCommessaTurnoList = new RisultatiCommessaTurnoList();
         result.forEach(risultatiCommessaTurnoList.getRisultatiCommessaTurnoList()::add);
         return risultatiCommessaTurnoList;
     }
 
     @Override
-    public RisultatiODLTurnoList getRisultatiODLTurno(String codiceODL, String turno) {
+    public RisultatiODLTurnoList getRisultatiODLTurno(String codiceODL) {
         Iterable<RisultatiODLTurnoIncartonatrice> result =
-                risultatiODLTurnoIncartonatriceRepository.findByODLAndCommessa(codiceODL,turno);
+                risultatiODLTurnoIncartonatriceRepository.findByODL(codiceODL);
         RisultatiODLTurnoList risultatiODLTurnoList = new RisultatiODLTurnoList();
         result.forEach(risultatiODLTurnoList.getRisultatiODLTurnoList()::add);
         return risultatiODLTurnoList;

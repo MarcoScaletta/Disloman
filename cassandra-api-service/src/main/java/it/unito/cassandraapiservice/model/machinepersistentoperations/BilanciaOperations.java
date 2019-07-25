@@ -36,7 +36,7 @@ public class BilanciaOperations implements GenericMachineOperations {
 
     public RecordsList addRecords(RecordsList recordsList){
         for (Records r : recordsList.getRecordsList())
-            repository.save((RecordsBilancia) r);
+            repository.save(new RecordsBilancia(r));
         return recordsList;
     }
 
@@ -63,18 +63,18 @@ public class BilanciaOperations implements GenericMachineOperations {
     }
 
     @Override
-    public RisultatiCommessaTurnoList getRisultatiCommessaTurno(String codiceCommessa, String turno) {
+    public RisultatiCommessaTurnoList getRisultatiCommessaTurno(String codiceCommessa) {
         Iterable<RisultatiCommessaTurnoBilancia> result =
-                risultatiCommessaTurnoBilanciaRepository.findByCommessaAndTurno(codiceCommessa, turno);
+                risultatiCommessaTurnoBilanciaRepository.findByCommessa(codiceCommessa);
         RisultatiCommessaTurnoList risultatiCommessaTurnoList = new RisultatiCommessaTurnoList();
         result.forEach(risultatiCommessaTurnoList.getRisultatiCommessaTurnoList()::add);
         return risultatiCommessaTurnoList;
     }
 
     @Override
-    public RisultatiODLTurnoList getRisultatiODLTurno(String codiceODL, String turno) {
+    public RisultatiODLTurnoList getRisultatiODLTurno(String codiceODL) {
         Iterable<RisultatiODLTurnoBilancia> result =
-                risultatiODLTurnoBilanciaRepository.findByODLAndCommessa(codiceODL,turno);
+                risultatiODLTurnoBilanciaRepository.findByODL(codiceODL);
         RisultatiODLTurnoList risultatiODLTurnoList = new RisultatiODLTurnoList();
         result.forEach(risultatiODLTurnoList.getRisultatiODLTurnoList()::add);
         return risultatiODLTurnoList;

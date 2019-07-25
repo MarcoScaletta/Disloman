@@ -35,7 +35,7 @@ public class TappatriceOperations implements GenericMachineOperations {
 
     public RecordsList addRecords(RecordsList recordsList){
         for (Records r : recordsList.getRecordsList())
-            repository.save((RecordsTappatrice) r);
+            repository.save(new RecordsTappatrice(r));
         return recordsList;
     }
 
@@ -63,18 +63,18 @@ public class TappatriceOperations implements GenericMachineOperations {
     }
 
     @Override
-    public RisultatiCommessaTurnoList getRisultatiCommessaTurno(String codiceCommessa, String turno) {
+    public RisultatiCommessaTurnoList getRisultatiCommessaTurno(String codiceCommessa) {
         Iterable<RisultatiCommessaTurnoTappatrice> result =
-                risultatiCommessaTurnoTappatriceRepository.findByCommessaAndTurno(codiceCommessa, turno);
+                risultatiCommessaTurnoTappatriceRepository.findByCommessa(codiceCommessa);
         RisultatiCommessaTurnoList risultatiCommessaTurnoList = new RisultatiCommessaTurnoList();
         result.forEach(risultatiCommessaTurnoList.getRisultatiCommessaTurnoList()::add);
         return risultatiCommessaTurnoList;
     }
 
     @Override
-    public RisultatiODLTurnoList getRisultatiODLTurno(String codiceODL, String turno) {
+    public RisultatiODLTurnoList getRisultatiODLTurno(String codiceODL) {
         Iterable<RisultatiODLTurnoTappatrice> result =
-                risultatiODLTurnoTappatriceRepository.findByODLAndCommessa(codiceODL,turno);
+                risultatiODLTurnoTappatriceRepository.findByODL(codiceODL);
         RisultatiODLTurnoList risultatiODLTurnoList = new RisultatiODLTurnoList();
         result.forEach(risultatiODLTurnoList.getRisultatiODLTurnoList()::add);
         return risultatiODLTurnoList;

@@ -35,7 +35,7 @@ public class EtichettatriceOperations implements GenericMachineOperations {
 
     public RecordsList addRecords(RecordsList recordsList){
         for (Records r : recordsList.getRecordsList())
-            repository.save((RecordsEtichettatrice) r);
+            repository.save(new RecordsEtichettatrice(r) );
         return recordsList;
     }
 
@@ -47,6 +47,7 @@ public class EtichettatriceOperations implements GenericMachineOperations {
 
     @Override
     public RisultatiList getRisultati() {
+
         Iterable<RisultatiEtichettatrice> result = risultatiEtichettatriceRepository.findAll();
         RisultatiList risultatiList = new RisultatiList();
         result.forEach(risultatiList.getRisultatiList()::add);
@@ -63,18 +64,18 @@ public class EtichettatriceOperations implements GenericMachineOperations {
     }
 
     @Override
-    public RisultatiCommessaTurnoList getRisultatiCommessaTurno(String codiceCommessa, String turno) {
+    public RisultatiCommessaTurnoList getRisultatiCommessaTurno(String codiceCommessa) {
         Iterable<RisultatiCommessaTurnoEtichettatrice> result =
-                risultatiCommessaTurnoEtichettatriceRepository.findByCommessaAndTurno(codiceCommessa, turno);
+                risultatiCommessaTurnoEtichettatriceRepository.findByCommessa(codiceCommessa);
         RisultatiCommessaTurnoList risultatiCommessaTurnoList = new RisultatiCommessaTurnoList();
         result.forEach(risultatiCommessaTurnoList.getRisultatiCommessaTurnoList()::add);
         return risultatiCommessaTurnoList;
     }
 
     @Override
-    public RisultatiODLTurnoList getRisultatiODLTurno(String codiceODL, String turno) {
+    public RisultatiODLTurnoList getRisultatiODLTurno(String codiceODL) {
         Iterable<RisultatiODLTurnoEtichettatrice> result =
-                risultatiODLTurnoEtichettatriceRepository.findByODLAndCommessa(codiceODL,turno);
+                risultatiODLTurnoEtichettatriceRepository.findByODL(codiceODL);
         RisultatiODLTurnoList risultatiODLTurnoList = new RisultatiODLTurnoList();
         result.forEach(risultatiODLTurnoList.getRisultatiODLTurnoList()::add);
         return risultatiODLTurnoList;
