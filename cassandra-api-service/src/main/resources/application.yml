@@ -2,32 +2,12 @@ spring:
   application:
     name: cassandra-api
 
-
-# Kafka Configurations
-#  cloud:
-#    stream:
-#      bindings:
-#        corkinglogs-in:
-#          destination: corkinglogs
-#          content-type: application/json
-#          group: oee-Computation-Group
-#        greetings-in:
-#          destination: greetings
-#          content-type: application/json
-#          group: oee-Computation-Group
-#      kafka:
-#        binder:
-#          brokers: kafka:9092
-
-  # Mongodb Configurations
+  # Cassandra Configurations
   data:
-#    mongodb:
-#      database: disloman
-#      uri: mongodb://mongo:27017/
     cassandra:
       keyspace-name: procemsa
       port: 9042
-      schema-action: recreate_drop_unused
+      schema-action: create_if_not_exists
       contact-points: cassandra
 
 
