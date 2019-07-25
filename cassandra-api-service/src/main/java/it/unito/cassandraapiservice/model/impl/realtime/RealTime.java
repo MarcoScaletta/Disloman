@@ -2,6 +2,7 @@ package it.unito.cassandraapiservice.model.impl.realtime;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.unito.cassandraapiservice.model.impl.generic.GenericRecord;
+import it.unito.cassandraapiservice.model.impl.generic.Risultati;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.data.cassandra.core.mapping.Column;
@@ -17,15 +18,23 @@ public class RealTime extends GenericRecord {
     @PrimaryKey("nome_macchina")
     private String nomeMacchina;
 
+    @JsonProperty("data")
+    @Column("data")
+    private String data;
+
+    @JsonProperty("orario")
+    @Column("orario")
+    private String orario;
+
     @JsonProperty("timestamp")
     @Column("timestamp")
     private String time;
 
     @JsonProperty("oee_dinamico")
     @Column("oee_dinamico")
-    private String oeeDinamico;
+    private float oeeDinamico;
 
     @JsonProperty("oee_aggregato")
     @Column("oee_aggregato")
-    private String oeeAggregato;
+    private float oeeAggregato;
 }
