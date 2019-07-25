@@ -1,6 +1,5 @@
 package it.unito.cassandraapiservice;
 
-import it.unito.cassandraapiservice.controller.GenericMachineOperations;
 import it.unito.cassandraapiservice.model.machinepersistentoperations.BilanciaOperations;
 import it.unito.cassandraapiservice.model.machinepersistentoperations.EtichettatriceOperations;
 import it.unito.cassandraapiservice.model.machinepersistentoperations.IncartonatriceOperations;
