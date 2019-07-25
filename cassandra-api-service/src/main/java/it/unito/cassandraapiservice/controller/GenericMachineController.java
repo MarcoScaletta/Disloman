@@ -10,10 +10,10 @@ import it.unito.cassandraapiservice.model.machinepersistentoperations.Tappatrice
 import it.unito.cassandraapiservice.model.repository.RealTimeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -62,52 +62,49 @@ public class GenericMachineController {
 
     // EXTERNAL API
 
-    @GetMapping("api/risultati/{macchina}/")
-    public RisultatiList getRisultati(@PathVariable String macchina){
+    @GetMapping("api/risultati/macchina/{macchina}/")
+    public ResponseEntity<RisultatiList> getRisultati(@PathVariable String macchina){
         GenericMachineOperations machineOperations = getMachineOperations(macchina);
         if (machineOperations == null)
-            return null;
-        return machineOperations.getRisultati();
+            return ResponseEntity.status(404).body(null);
+        return ResponseEntity.ok(machineOperations.getRisultati());
     }
 
-    @GetMapping("api/risultati_commessa/{macchina}/{commessa}/")
-    public RisultatiCommessaList getRisultatiCommessa(
+    @GetMapping("api/risultati/macchina/{macchina}/commessa/{commessa}/")
+    public ResponseEntity<RisultatiCommessaList> getRisultatiCommessa(
             @PathVariable String macchina,
             @PathVariable String commessa){
         GenericMachineOperations machineOperations = getMachineOperations(macchina);
         if (machineOperations == null)
-            return null;
-        return machineOperations.getRisultatiCommessa(commessa);
+            return ResponseEntity.status(404).body(null);
+        return ResponseEntity.ok(machineOperations.getRisultatiCommessa(commessa));
     }
 
-    @GetMapping("api/risultati_commessa_turno/{macchina}/{commessa}/{turno}/")
-    public RisultatiCommessaTurnoList getRisultatiCommessaTurno(
+    @GetMapping("api/risultati_turno/macchina/{macchina}/commessa/{commessa}/")
+    public ResponseEntity<RisultatiCommessaTurnoList> getRisultatiCommessaTurno(
             @PathVariable String macchina,
-            @PathVariable String commessa,
-            @PathVariable String turno){
+            @PathVariable String commessa){
         GenericMachineOperations machineOperations = getMachineOperations(macchina);
         if (machineOperations == null)
-            return null;
-        return machineOperations.getRisultatiCommessaTurno(commessa, turno);
+            return ResponseEntity.status(404).body(null);
+        return ResponseEntity.ok(machineOperations.getRisultatiCommessaTurno(commessa));
     }
 
-    @GetMapping("api/risultati_odl_turno/{macchina}/{odl}/{turno}/")
-    public RisultatiODLTurnoList getRisultatiODLTurno(
+    @GetMapping("api/risultati_turno/macchina/{macchina}/odl/{odl}/")
+    public ResponseEntity<RisultatiODLTurnoList> getRisultatiODLTurno(
             @PathVariable String macchina,
-            @PathVariable String odl,
-            @PathVariable String turno){
+            @PathVariable String odl){
         GenericMachineOperations machineOperations = getMachineOperations(macchina);
         if (machineOperations == null)
-            return null;
-        return machineOperations.getRisultatiODLTurno(odl, turno);
+            return ResponseEntity.status(404).body(null);
+        return ResponseEntity.ok(machineOperations.getRisultatiODLTurno(odl));
     }
 
-    @GetMapping("api/real_time/")
-    public List<RealTime> getRealTime(){
-        Iterable<RealTime> result = realTimeRepository.findAll();
-        List<RealTime> realTimes = new ArrayList<>();
-        result.forEach(realTimes::add);
-        return realTimes;
+    @GetMapping("api/real_time/macchina/{macchina}/")
+    public ResponseEntity<RealTime> getRealTimeMacchina(@PathVariable String macchina){
+        Optional<RealTime> result = realTimeRepository.findById(macchina);
+        return result.map(ResponseEntity::ok).orElseGet(() ->
+                ResponseEntity.status(404).body(null));
     }
 
 
