@@ -9,4 +9,10 @@ import org.springframework.data.cassandra.core.mapping.Table;
 @Data
 @Table(value = "records_incartonatrice")
 public class RecordsIncartonatrice extends Records {
+    public RecordsIncartonatrice(){
+        super();
+    }
+    public RecordsIncartonatrice(Records records){
+        super(records);
+    }
 }

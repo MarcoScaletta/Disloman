@@ -9,5 +9,12 @@ import org.springframework.data.cassandra.core.mapping.Table;
 @Data
 @Table(value = "records_bilancia")
 public class RecordsBilancia extends Records {
+
+    public RecordsBilancia(){
+        super();
+    }
+    public RecordsBilancia(Records records){
+        super(records);
+    }
 }
 

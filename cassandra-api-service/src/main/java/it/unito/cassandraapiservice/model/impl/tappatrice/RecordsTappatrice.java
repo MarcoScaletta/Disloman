@@ -8,4 +8,11 @@ import org.springframework.data.cassandra.core.mapping.Table;
 @Data
 @Table(value = "records_tappatrice")
 public class RecordsTappatrice extends Records {
+
+    public RecordsTappatrice(){
+        super();
+    }
+    public RecordsTappatrice(Records records){
+        super(records);
+    }
 }
