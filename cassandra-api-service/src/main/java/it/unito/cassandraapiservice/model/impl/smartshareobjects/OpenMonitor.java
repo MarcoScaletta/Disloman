@@ -7,7 +7,7 @@ import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
 
 @Data
-//@Table(value = "open_monitor")
+@Table(value = "open_monitor")
 public class OpenMonitor {
 
     @JsonProperty("cod_monitor")
