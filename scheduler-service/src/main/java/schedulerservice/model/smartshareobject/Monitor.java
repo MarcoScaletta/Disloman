@@ -1,4 +1,4 @@
-package schedulerservice.model.smartshareobject.odl.fasi;
+package schedulerservice.model.smartshareobject;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -22,6 +22,8 @@ public class Monitor {
     private String timeStop;
     @JsonProperty("cod_odl")
     private String codODL;
+    @JsonProperty("cod_fase")
+    private String codFase;
 
 
     @Override
