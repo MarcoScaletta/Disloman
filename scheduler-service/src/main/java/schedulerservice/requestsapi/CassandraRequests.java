@@ -9,8 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import schedulerservice.model.cassandraobjects.OpenMonitor;
-import schedulerservice.model.cassandraobjects.RecordsList;
-import schedulerservice.model.records.Record;
+import schedulerservice.model.records.RecordsList;
 import schedulerservice.model.smartshareobject.Monitor;
 
 import java.util.List;
@@ -18,18 +17,6 @@ import java.util.List;
 @Slf4j
 @Component
 public class CassandraRequests {
-
-    @Autowired
-    private String tappatriceRecordsTableName;
-
-    @Autowired
-    private String incartonatriceRecordsTableName;
-
-    @Autowired
-    private String etichettatriceRecordsTableName;
-
-    @Autowired
-    private String bilanciaRecordsTableName;
 
     @Autowired
     private String cassandraAPIServiceAddress;
