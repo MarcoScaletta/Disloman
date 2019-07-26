@@ -12,10 +12,10 @@ management:
 info:
   app:
     name: Scheduler Service
-    description: Microservizio che si occupa di effettuare il caricamento dei dati nei DB!
+    description: Microservizio che si occupa dell'integrazione e persistenza dei dati integrati!
 
 server:
-  port: 8082
+  port: 8095
 
 ---
 spring:
