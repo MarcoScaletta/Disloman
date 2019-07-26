@@ -7,7 +7,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-import schedulerservice.model.records.Record;
+import schedulerservice.model.records.Records;
+import schedulerservice.model.records.RecordsList;
 import schedulerservice.model.smartshareobject.Monitor;
 
 import java.sql.Timestamp;
@@ -34,72 +35,65 @@ public class SmartHingeRequests {
     @Autowired
     public String smartHingeAPIServiceAddress;
 
-    public List<Record> getTappatriceRecord(Date start, Date stop){
+    public List<Records> getTappatriceRecord(Date start, Date stop){
         return getRecords(start, stop, tappatriceRecordsTableName);
     }
 
-    public List<Record> getEtichettatriceRecord(Date start, Date stop){
+    public List<Records> getEtichettatriceRecord(Date start, Date stop){
         return getRecords(start, stop, etichettatriceRecordsTableName);
     }
 
-    public List<Record> getIncartonatriceRecord(Date start, Date stop){
+    public List<Records> getIncartonatriceRecord(Date start, Date stop){
         return getRecords(start, stop, incartonatriceRecordsTableName);
     }
 
-    public List<Record> getBilanciaRecord(Date start, Date stop){
+    public List<Records> getBilanciaRecord(Date start, Date stop){
 
         return getRecords(start, stop, bilanciaRecordsTableName);
     }
 
 
-    public List<Record> getTappatriceRecord(Monitor monitor){
+    public List<Records> getTappatriceRecord(Monitor monitor){
         return getRecords(monitor, tappatriceRecordsTableName);
     }
 
-    public List<Record> getEtichettatriceRecord(Monitor monitor){
+    public List<Records> getEtichettatriceRecord(Monitor monitor){
         return getRecords(monitor, etichettatriceRecordsTableName);
     }
 
-    public List<Record> getIncartonatriceRecord(Monitor monitor){
+    public List<Records> getIncartonatriceRecord(Monitor monitor){
         return getRecords(monitor, incartonatriceRecordsTableName);
     }
 
-    public List<Record> getBilanciaRecord(Monitor monitor){
+    public List<Records> getBilanciaRecord(Monitor monitor){
         return getRecords(monitor, bilanciaRecordsTableName);
     }
 
-    public List<Record> getRecords(Monitor monitor,String urlMachine){
+    public List<Records> getRecords(Monitor monitor, String urlMachine){
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-
-        ResponseEntity<List<Record>> response = new RestTemplate().exchange(
-                smartHingeAPIServiceAddress + "/" + urlMachine +
-                        "/monitor?start="+
-                        sdf.format(new Timestamp(Long.parseLong(monitor.getTimeStart())))+
-                        "&stop="+
-                        sdf.format(new Timestamp(Long.parseLong(monitor.getTimeStop()))),
-                HttpMethod.GET,
-                null,new ParameterizedTypeReference<List<Record>>(){});
-
-        if(response.getBody() != null)
-            log.info("Dimensione dati ottenuti per [" + urlMachine + "] : " + response.getBody().size());
-        return response.getBody();
+        return getRecords(
+                new Timestamp(Long.parseLong(monitor.getTimeStart())),
+                new Timestamp(Long.parseLong(monitor.getTimeStop())),
+                        urlMachine);
     }
 
-    public List<Record> getRecords(Date start, Date stop, String urlMachine){
+    public List<Records> getRecords(Date start, Date stop, String urlMachine){
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        ResponseEntity<List<Record>> response = new RestTemplate().exchange(
+        ResponseEntity<RecordsList> response = new RestTemplate().exchange(
                 smartHingeAPIServiceAddress + "/" + urlMachine +
                         "/monitor?start="+
                         sdf.format(start)+
                         "&stop="+
                         sdf.format(stop),
                 HttpMethod.GET,
-                null,new ParameterizedTypeReference<List<Record>>(){});
+                null,new ParameterizedTypeReference<RecordsList>(){});
         if(response.getBody() != null)
-            log.info("Dimensione dati ottenuti per [" + urlMachine + "] : " + response.getBody().size());
-        return response.getBody();
+            log.info("Dimensione dati ottenuti per [" + urlMachine + "] : "
+                    + response.getBody().getRecordsList().size());
+        else
+            return null;
+        return response.getBody().getRecordsList();
     }
 
 
