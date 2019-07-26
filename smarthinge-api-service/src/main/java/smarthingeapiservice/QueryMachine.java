@@ -32,8 +32,8 @@ public class QueryMachine {
     private DataSource datasource;
 
     @SuppressWarnings("Duplicates")
-    public List<Record> queryToMachine(Timestamp startTime, Timestamp stopTime) {
-        List<Record> records = new ArrayList<>();
+    public List<Records> queryToMachine(Timestamp startTime, Timestamp stopTime) {
+        List<Records> records = new ArrayList<>();
         try {
             int stringSize;
             Connection conn = datasource.getConnection();
@@ -55,7 +55,7 @@ public class QueryMachine {
                 backspace = "";
                 String time = rs.getString("TIME");
                 int pzz = rs.getInt("VAR_VALUE");
-                records.add(new Record(time,pzz));
+                records.add(new Records(time,pzz));
                 stringSize = (records.size() + "").length();
                 for (int j = 0; j < stringSize; j++) {
                     backspace += "\b";

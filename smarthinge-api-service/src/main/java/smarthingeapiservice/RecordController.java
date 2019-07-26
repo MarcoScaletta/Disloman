@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,34 +36,34 @@ public class RecordController {
 
     private SimpleDateFormat completeFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
-
-    @GetMapping("/records_bilancia/monitor")
-    public ResponseEntity<List<Record>> getBilanciaRecords(@RequestParam String start, @RequestParam String stop) {
-        log.info("GET BILANCIA_RECORDS");
-        return getGenericRecords(queryBilancia, start, stop);
+    @GetMapping("/records/macchina/{macchina}")
+    public ResponseEntity<RecordsList> getRecords(@PathVariable String macchina, @RequestParam String start, @RequestParam String stop) {
+        log.info("get records from " + macchina);
+        QueryMachine queryMachine = getQueryMachine(macchina);
+        if (queryMachine == null){
+            log.info("Machine [" + macchina +"] not existing!");
+            return ResponseEntity.status(404).body(null);
+        }
+        return getGenericRecords(queryMachine, start, stop);
     }
 
-    @GetMapping("/records_incartonatrice/monitor")
-    public ResponseEntity<List<Record>> getIncartonatriceRecords(@RequestParam String start, @RequestParam String stop) {
-        log.info("GET INCARTONATRICE_RECORDS");
-        return getGenericRecords(queryIncartonatrice, start, stop);
+    public QueryMachine getQueryMachine(String macchina){
+
+        switch (macchina){
+            case "bilancia":return queryBilancia;
+            case "etichettatrice": return queryEtichettatrice;
+            case "tappatrice": return queryTappatrice;
+            case "incartonatrice": return queryIncartonatrice;
+            default: return null;
+        }
+
     }
 
-    @GetMapping("/records_tappatrice/monitor")
-    public ResponseEntity<List<Record>> getTappatriceRecords(@RequestParam String start, @RequestParam String stop) {
-        log.info("GET TAPPATRICE_RECORDS");
-        return getGenericRecords(queryTappatrice, start, stop);
-    }
-
-    @GetMapping("/records_etichettatrice/monitor")
-    public ResponseEntity<List<Record>> getEtichettatriceRecords(@RequestParam String start, @RequestParam String stop) {
-        log.info("GET ETICHETTATRICE_RECORDS");
-        return getGenericRecords(queryEtichettatrice, start, stop);
-    }
-
-    private ResponseEntity<List<Record>> getGenericRecords(QueryMachine query, String start, String stop) {
+    private ResponseEntity<RecordsList> getGenericRecords(QueryMachine query, String start, String stop) {
 
         Timestamp startTime,stopTime;
+        List<Records> records;
+        RecordsList recordsList;
         try{
 
             startTime = new Timestamp(completeFormat.parse(start).getTime());
@@ -71,7 +72,11 @@ public class RecordController {
             log.info("Wrong date format");
             return ResponseEntity.status(400).body(null);
         }
+        records = query.queryToMachine(startTime,stopTime);
+        recordsList = new RecordsList();
+        recordsList.getRecordsList().addAll(records);
 
-        return ResponseEntity.ok(query.queryToMachine(startTime,stopTime));
+
+        return ResponseEntity.ok(recordsList);
     }
 }

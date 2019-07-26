@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class Record {
+public class Records {
 
     @JsonProperty("time")
     private String time;
