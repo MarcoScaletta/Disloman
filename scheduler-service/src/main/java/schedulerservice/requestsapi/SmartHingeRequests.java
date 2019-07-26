@@ -66,7 +66,7 @@ public class SmartHingeRequests {
     }
 
     public List<Records> getRecords(Date start, Date stop, String macchina){
-
+        try{
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         ResponseEntity<RecordsList> response = new RestTemplate().exchange(
                 smartHingeAPIServiceAddress + "/records/macchina/" + macchina +
@@ -82,6 +82,10 @@ public class SmartHingeRequests {
         else
             return null;
         return response.getBody().getRecordsList();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 
 
