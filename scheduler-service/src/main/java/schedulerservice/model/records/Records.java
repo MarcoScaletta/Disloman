@@ -11,7 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Setter
 @Getter
-public class Record {
+public class Records {
 
     @JsonProperty("time")
     private String time;
@@ -36,7 +36,7 @@ public class Record {
 
     @Override
     public String toString() {
-        return "Record{" +
+        return "Records{" +
                 "time='" + time + '\'' +
                 ", pezziProdotti=" + pezziProdotti +
                 ", codiceProdotto='" + codiceProdotto + '\'' +

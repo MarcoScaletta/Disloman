@@ -1,4 +1,4 @@
-package schedulerservice.model.smartshareobject.odl;
+package schedulerservice.model.smartshareobject;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
@@ -14,7 +14,7 @@ public class ODL {
     @Override
     public String toString() {
         return "ODL{" +
-                "codODL='" + codODL + '\'' +
+                "codiceODL='" + codODL + '\'' +
                 ", numFasiPrev=" + numFasiPrev +
                 '}';
     }

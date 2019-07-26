@@ -1,4 +1,4 @@
-package schedulerservice.model.smartshareobject.odl;
+package schedulerservice.model.smartshareobject;
 
 import lombok.Getter;
 import java.util.List;

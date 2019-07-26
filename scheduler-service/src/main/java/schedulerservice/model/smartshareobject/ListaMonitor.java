@@ -1,4 +1,4 @@
-package schedulerservice.model.smartshareobject.odl.fasi;
+package schedulerservice.model.smartshareobject;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
@@ -8,5 +8,5 @@ import java.util.List;
 @Getter
 public class ListaMonitor {
     @JsonProperty("lista_monitor")
-    public List<Monitor> listaMonitor;
+    private List<Monitor> listaMonitor;
 }

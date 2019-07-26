@@ -1,8 +1,7 @@
-package schedulerservice.model.cassandraobjects;
+package schedulerservice.model.records;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
-import schedulerservice.model.records.Record;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,5 +10,5 @@ import java.util.List;
 public class RecordsList {
 
     @JsonProperty("records_list")
-    List<Record> recordsList = new ArrayList<>();
+    List<Records> recordsList = new ArrayList<>();
 }

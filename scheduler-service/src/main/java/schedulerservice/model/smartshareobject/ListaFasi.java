@@ -1,4 +1,4 @@
-package schedulerservice.model.smartshareobject.odl.fasi;
+package schedulerservice.model.smartshareobject;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
