@@ -20,53 +20,41 @@ import java.util.List;
 @Component
 public class SmartHingeRequests {
 
-    @Autowired
-    private String tappatriceRecordsTableName;
-
-    @Autowired
-    private String incartonatriceRecordsTableName;
-
-    @Autowired
-    private String etichettatriceRecordsTableName;
-
-    @Autowired
-    private String bilanciaRecordsTableName;
 
     @Autowired
     public String smartHingeAPIServiceAddress;
 
     public List<Records> getTappatriceRecord(Date start, Date stop){
-        return getRecords(start, stop, tappatriceRecordsTableName);
+        return getRecords(start, stop, "tappatrice");
     }
 
     public List<Records> getEtichettatriceRecord(Date start, Date stop){
-        return getRecords(start, stop, etichettatriceRecordsTableName);
+        return getRecords(start, stop, "etichettatrice");
     }
 
     public List<Records> getIncartonatriceRecord(Date start, Date stop){
-        return getRecords(start, stop, incartonatriceRecordsTableName);
+        return getRecords(start, stop, "incartonatrice");
     }
 
     public List<Records> getBilanciaRecord(Date start, Date stop){
-
-        return getRecords(start, stop, bilanciaRecordsTableName);
+        return getRecords(start, stop, "bilancia");
     }
 
 
     public List<Records> getTappatriceRecord(Monitor monitor){
-        return getRecords(monitor, tappatriceRecordsTableName);
+        return getRecords(monitor, "tappatrice");
     }
 
     public List<Records> getEtichettatriceRecord(Monitor monitor){
-        return getRecords(monitor, etichettatriceRecordsTableName);
+        return getRecords(monitor, "etichettatrice");
     }
 
     public List<Records> getIncartonatriceRecord(Monitor monitor){
-        return getRecords(monitor, incartonatriceRecordsTableName);
+        return getRecords(monitor, "incartonatrice");
     }
 
     public List<Records> getBilanciaRecord(Monitor monitor){
-        return getRecords(monitor, bilanciaRecordsTableName);
+        return getRecords(monitor, "bilancia");
     }
 
     public List<Records> getRecords(Monitor monitor, String urlMachine){
@@ -77,19 +65,19 @@ public class SmartHingeRequests {
                         urlMachine);
     }
 
-    public List<Records> getRecords(Date start, Date stop, String urlMachine){
+    public List<Records> getRecords(Date start, Date stop, String macchina){
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         ResponseEntity<RecordsList> response = new RestTemplate().exchange(
-                smartHingeAPIServiceAddress + "/" + urlMachine +
-                        "/monitor?start="+
+                smartHingeAPIServiceAddress + "/records/macchina/" + macchina +
+                        "?start="+
                         sdf.format(start)+
                         "&stop="+
                         sdf.format(stop),
                 HttpMethod.GET,
                 null,new ParameterizedTypeReference<RecordsList>(){});
         if(response.getBody() != null)
-            log.info("Dimensione dati ottenuti per [" + urlMachine + "] : "
+            log.info("Dimensione dati ottenuti per [" + macchina + "] : "
                     + response.getBody().getRecordsList().size());
         else
             return null;
