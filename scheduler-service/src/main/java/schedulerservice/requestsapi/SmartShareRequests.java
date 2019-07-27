@@ -25,32 +25,20 @@ public class SmartShareRequests {
 
 
     public ListaODL getListaODL(){
-        try{
-            ResponseEntity<ListaODL> response = restTemplate.exchange(
-                    smartshareAPIAddress + "/odl/",
-                    HttpMethod.GET,
-                    httpEntitySmartShare,ListaODL.class);
+        ResponseEntity<ListaODL> response = restTemplate.exchange(
+                smartshareAPIAddress + "/odl/",
+                HttpMethod.GET,
+                httpEntitySmartShare,ListaODL.class);
 
-            return response.getBody();
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return null;
+        return response.getBody();
     }
 
     public ListaMonitor getListaMonitor(){
-        try{
-            ResponseEntity<ListaMonitor> response = restTemplate.exchange(
-                    smartshareAPIAddress + "/monitor/",
-                    HttpMethod.GET,
-                    httpEntitySmartShare,ListaMonitor.class);
-            return response.getBody();
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return null;
+        ResponseEntity<ListaMonitor> response = restTemplate.exchange(
+                smartshareAPIAddress + "/monitor/",
+                HttpMethod.GET,
+                httpEntitySmartShare,ListaMonitor.class);
+        return response.getBody();
     }
 
     public Monitor getMonitor(String codMonitor){
@@ -68,21 +56,16 @@ public class SmartShareRequests {
     }
 
     public Fase getSingleFase(String codODL, String codFase){
-        try{
-            ResponseEntity<Fase> response = restTemplate.exchange(
-                    smartshareAPIAddress +
-                            "/odl/" +
-                            codODL+
-                            "/fasi/"+
-                            codFase,
-                    HttpMethod.GET,
-                    httpEntitySmartShare,Fase.class);
-            return response.getBody();
+        ResponseEntity<Fase> response = restTemplate.exchange(
+                smartshareAPIAddress +
+                        "/odl/" +
+                        codODL+
+                        "/fasi/"+
+                        codFase,
+                HttpMethod.GET,
+                httpEntitySmartShare,Fase.class);
+        return response.getBody();
 
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return null;
     }
 
 //    public ODL getSingleODL(String codODL){
@@ -104,16 +87,11 @@ public class SmartShareRequests {
 //    }
 
     public ListaFasi getListaFasi(String odlCode){
-        try{
-            ResponseEntity<ListaFasi> response = restTemplate.exchange(
-                    smartshareAPIAddress + "/odl/"+odlCode+"/fasi/",
-                    HttpMethod.GET,
-                    httpEntitySmartShare,ListaFasi.class);
-            return response.getBody();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return null;
+        ResponseEntity<ListaFasi> response = restTemplate.exchange(
+                smartshareAPIAddress + "/odl/"+odlCode+"/fasi/",
+                HttpMethod.GET,
+                httpEntitySmartShare,ListaFasi.class);
+        return response.getBody();
     }
 
 
