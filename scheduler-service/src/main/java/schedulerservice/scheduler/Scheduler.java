@@ -3,6 +3,7 @@ package schedulerservice.scheduler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpServerErrorException;
 import schedulerservice.model.Turno;
 import schedulerservice.model.cassandraobjects.OpenMonitor;
 import schedulerservice.model.records.Records;
@@ -84,71 +85,87 @@ public class Scheduler {
 
     }
 
-    public boolean oldMonitor() throws Exception {
+    public boolean oldMonitor() {
+        try{
+            Map<String, Map<String, Fase>> odlFasiMap = new HashMap<>();
+            List<Monitor> monitors = smartShareRequests.getListaMonitor().getListaMonitor();
+            List<Monitor> filteredMonitor = filterMonitor(monitors, false);
+            if(filteredMonitor == null)
+                return false;
+            for (Monitor m : filteredMonitor) {
+                if (m.getTimeStop() != null)
+                    if(! saveMonitor(m, true, odlFasiMap, false)){
+                        return false;
+                    }
 
-        Map<String, Map<String, Fase>> odlFasiMap = new HashMap<>();
-        List<Monitor> monitors = smartShareRequests.getListaMonitor().getListaMonitor();
-        List<Monitor> filteredMonitor = filterMonitor(monitors, false);
-        for (Monitor m : filteredMonitor) {
-            if (m.getTimeStop() != null)
-                if(! saveMonitor(m, true, odlFasiMap, false)){
-                    return false;
-                }
-
+            }
+            return true;
+        }catch (HttpServerErrorException e){
+            logger.err("HTTP ERROR: " + e.getStatusCode());
+            return false;
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
         }
-        return true;
     }
 
-    public boolean newMonitor() throws Exception {
+    public boolean newMonitor() {
         Monitor monitor;
         boolean isToBeClosed;
+        try{
+            OpenMonitor openMonitor = cassandraRequests.getOpenMonitor();
 
-        OpenMonitor openMonitor = cassandraRequests.getOpenMonitor();
-
-        if(openMonitor == null){
-            logger.logFirst("No old open monitor");
-            monitor = getOpenMonitor();
-            if(monitor != null){
-                openMonitor = new OpenMonitor();
-                openMonitor.setCodMonitor(monitor.getCodMonitor());
-                openMonitor.setStartTime(monitor.getTimeStart());
-                cassandraRequests.postOpenMonitor(openMonitor);
-            }else
-                logger.logFirst("No new open monitor");
-        }
-        if(openMonitor != null){
-            logger.logFirst("old monitor: " +openMonitor.getCodMonitor());
-            monitor = smartShareRequests.getMonitor(openMonitor.getCodMonitor());
-            monitor.setTimeStart(openMonitor.getStartTime());
-
-            if(monitor.getTimeStop() == null){
-                logger.logFirst("INFO: Il monitor ["+ monitor.getCodMonitor()+"] e' ancora aperto.");
-                logger.logFirst("INFO: Nuovo intervallo parziale"
-                        +"\n      Inizio: "+ new Timestamp(Long.parseLong(openMonitor.getStartTime()))
-                        +"\n      Fine: "  + new Timestamp(System.currentTimeMillis()));
-                monitor.setTimeStop(System.currentTimeMillis()+"");
-                isToBeClosed = false;
-            }else{
-                logger.logFirst("INFO: Il monitor ["+ monitor.getCodMonitor()+"] e' stato chiuso.");
-                logger.logFirst("\nINFO: Nuovo intervallo parziale"
-                        +"\n      Inizio: " + new Timestamp(Long.parseLong(openMonitor.getStartTime()))
-                        +"\n      Fine: " + new Timestamp(Long.parseLong(monitor.getTimeStop())));
-                isToBeClosed = true;
-            }
-            if(!saveMonitor(monitor, isToBeClosed,null, true)) {
-                return false;
-            }else{
-                openMonitor.setStartTime(monitor.getTimeStop());
-                if(isToBeClosed){
-                    cassandraRequests.deleteOpenMonitor(monitor.getCodMonitor());
-                }else{
+            if(openMonitor == null){
+                logger.logFirst("No old open monitor");
+                monitor = getOpenMonitor();
+                if(monitor != null){
+                    openMonitor = new OpenMonitor();
+                    openMonitor.setCodMonitor(monitor.getCodMonitor());
+                    openMonitor.setStartTime(monitor.getTimeStart());
                     cassandraRequests.postOpenMonitor(openMonitor);
+                }else
+                    logger.logFirst("No new open monitor");
+            }
+            if(openMonitor != null){
+                logger.logFirst("old monitor: " +openMonitor.getCodMonitor());
+                monitor = smartShareRequests.getMonitor(openMonitor.getCodMonitor());
+                monitor.setTimeStart(openMonitor.getStartTime());
 
+                if(monitor.getTimeStop() == null){
+                    logger.logFirst("INFO: Il monitor ["+ monitor.getCodMonitor()+"] e' ancora aperto.");
+                    logger.logFirst("INFO: Nuovo intervallo parziale"
+                            +"\n      Inizio: "+ new Timestamp(Long.parseLong(openMonitor.getStartTime()))
+                            +"\n      Fine: "  + new Timestamp(System.currentTimeMillis()));
+                    monitor.setTimeStop(System.currentTimeMillis()+"");
+                    isToBeClosed = false;
+                }else{
+                    logger.logFirst("INFO: Il monitor ["+ monitor.getCodMonitor()+"] e' stato chiuso.");
+                    logger.logFirst("\nINFO: Nuovo intervallo parziale"
+                            +"\n      Inizio: " + new Timestamp(Long.parseLong(openMonitor.getStartTime()))
+                            +"\n      Fine: " + new Timestamp(Long.parseLong(monitor.getTimeStop())));
+                    isToBeClosed = true;
+                }
+                if(!saveMonitor(monitor, isToBeClosed,null, true)) {
+                    return false;
+                }else{
+                    openMonitor.setStartTime(monitor.getTimeStop());
+                    if(isToBeClosed){
+                        cassandraRequests.deleteOpenMonitor(monitor.getCodMonitor());
+                    }else{
+                        cassandraRequests.postOpenMonitor(openMonitor);
+
+                    }
                 }
             }
-        }
-        return true;
+            return true;
 
+        }catch (HttpServerErrorException e){
+            logger.err("HTTP ERROR: " + e.getStatusCode());
+            return false;
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public Monitor getOpenMonitor(){
@@ -191,7 +208,6 @@ public class Scheduler {
                     }
                 }
             }
-
             if(fase != null) {
 
                 if (fase.getListaProdottiLavorati().size() < 1) {
@@ -312,6 +328,8 @@ public class Scheduler {
             monitor.setCodMonitor(openMonitors.getCodMonitor());
             monitors.remove(monitor);
         }
+        if(savedMonitor == null)
+            return null;
         monitors.removeAll(savedMonitor);
 
         String log = ("Number of missed monitor: " + monitors.size());
