@@ -8,14 +8,20 @@ import schedulerservice.model.Turno;
 import schedulerservice.model.cassandraobjects.OpenMonitor;
 import schedulerservice.model.records.Records;
 import schedulerservice.model.records.RecordsList;
-import schedulerservice.model.smartshareobject.*;
+import schedulerservice.model.smartshareobject.Fase;
+import schedulerservice.model.smartshareobject.ListaMonitor;
+import schedulerservice.model.smartshareobject.Monitor;
+import schedulerservice.model.smartshareobject.ProdottoLavorato;
 import schedulerservice.requestsapi.CassandraRequests;
 import schedulerservice.requestsapi.SmartHingeRequests;
 import schedulerservice.requestsapi.SmartShareRequests;
 
 import javax.annotation.PostConstruct;
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Component
@@ -219,31 +225,39 @@ public class Scheduler {
                     return false;
                 }
 
-
                 prodottoLavorato = fase.getListaProdottiLavorati().get(0);
                 codCommessa = prodottoLavorato.getCodCommessa();
                 codProdotto = prodottoLavorato.getCodProdotto();
                 nomeProdotto = prodottoLavorato.getNomeProdotto();
                 turno = Turno.getTurno(m.getTimeStart()) + "";
-                String log =("\nMonitor: " + m.getCodMonitor()
-                        +"\n>>     Start: " + startDate
-                        +"\n>>      Stop: " + stopDate
-                        + "\n>>      Fase: " + codFase
-                        +"\n>>       ODL: " + codODL
-                        +"\n>>  Commessa: " + codCommessa
-                        +"\n>>  Prodotto: " + codProdotto);
-                if(first)
-                    logger.logFirst(log);
-                else
-                    logger.logSecond(log);
 
-                return saveRecords(m,
+
+                String [] logs =new String[] {"Monitor: " + m.getCodMonitor(),
+                        ">>     Start: " + startDate,
+                        ">>      Stop: " + stopDate,
+                        ">>      Fase: " + codFase,
+                        ">>       ODL: " + codODL,
+                        ">>  Commessa: " + codCommessa,
+                        ">>  Prodotto: " + codProdotto};
+                if(first)
+                    for(String log : logs)
+                        logger.logFirst(log);
+                else
+                    for(String log : logs)
+                        logger.logSecond(log);
+                boolean savedRecords = saveRecords(m,
                         codProdotto,
                         nomeProdotto,
                         codCommessa,
                         codODL,
                         turno,
                         closeMonitor);
+                if(!savedRecords)
+                    if(first)
+                        logger.logFirst("Error saving records");
+                    else
+                        logger.logSecond("Error saving records");
+                return savedRecords;
             }
         }else
             throw new Exception("Stop time of monitor is NULL");
@@ -293,6 +307,7 @@ public class Scheduler {
                 cassandraRequests.postRecordsIncartonatrice(recordsIncartonatrice);
                 cassandraRequests.postRecordsBilancia(recordsBilancia);
             }catch (Exception e){
+                e.printStackTrace();
                 return false;
             }
             if(closeMonitor)
