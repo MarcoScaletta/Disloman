@@ -123,38 +123,38 @@ public class Scheduler {
                     openMonitor.setCodMonitor(monitor.getCodMonitor());
                     openMonitor.setStartTime(monitor.getTimeStart());
                     cassandraRequests.postOpenMonitor(openMonitor);
-                }else
+                }else{
                     logger.logFirst("No new open monitor");
-            }
-            if(openMonitor != null){
-                logger.logFirst("old monitor: " +openMonitor.getCodMonitor());
-                monitor = smartShareRequests.getMonitor(openMonitor.getCodMonitor());
-                monitor.setTimeStart(openMonitor.getStartTime());
-
-                if(monitor.getTimeStop() == null){
-                    logger.logFirst("INFO: Il monitor ["+ monitor.getCodMonitor()+"] e' ancora aperto.");
-                    logger.logFirst("INFO: Nuovo intervallo parziale"
-                            +"\n      Inizio: "+ new Timestamp(Long.parseLong(openMonitor.getStartTime()))
-                            +"\n      Fine: "  + new Timestamp(System.currentTimeMillis()));
-                    monitor.setTimeStop(System.currentTimeMillis()+"");
-                    isToBeClosed = false;
-                }else{
-                    logger.logFirst("INFO: Il monitor ["+ monitor.getCodMonitor()+"] e' stato chiuso.");
-                    logger.logFirst("\nINFO: Nuovo intervallo parziale"
-                            +"\n      Inizio: " + new Timestamp(Long.parseLong(openMonitor.getStartTime()))
-                            +"\n      Fine: " + new Timestamp(Long.parseLong(monitor.getTimeStop())));
-                    isToBeClosed = true;
-                }
-                if(!saveMonitor(monitor, isToBeClosed,null, true)) {
                     return false;
-                }else{
-                    openMonitor.setStartTime(monitor.getTimeStop());
-                    if(isToBeClosed){
-                        cassandraRequests.deleteOpenMonitor(monitor.getCodMonitor());
-                    }else{
-                        cassandraRequests.postOpenMonitor(openMonitor);
+                }
+            }
+            logger.logFirst("old monitor: " +openMonitor.getCodMonitor());
+            monitor = smartShareRequests.getMonitor(openMonitor.getCodMonitor());
+            monitor.setTimeStart(openMonitor.getStartTime());
 
-                    }
+            if(monitor.getTimeStop() == null){
+                logger.logFirst("INFO: Il monitor ["+ monitor.getCodMonitor()+"] e' ancora aperto.");
+                logger.logFirst("INFO: Nuovo intervallo parziale"
+                        +"\n      Inizio: "+ new Timestamp(Long.parseLong(openMonitor.getStartTime()))
+                        +"\n      Fine: "  + new Timestamp(System.currentTimeMillis()));
+                monitor.setTimeStop(System.currentTimeMillis()+"");
+                isToBeClosed = false;
+            }else{
+                logger.logFirst("INFO: Il monitor ["+ monitor.getCodMonitor()+"] e' stato chiuso.");
+                logger.logFirst("\nINFO: Nuovo intervallo parziale"
+                        +"\n      Inizio: " + new Timestamp(Long.parseLong(openMonitor.getStartTime()))
+                        +"\n      Fine: " + new Timestamp(Long.parseLong(monitor.getTimeStop())));
+                isToBeClosed = true;
+            }
+            if(!saveMonitor(monitor, isToBeClosed,null, true)) {
+                return false;
+            }else{
+                openMonitor.setStartTime(monitor.getTimeStop());
+                if(isToBeClosed){
+                    cassandraRequests.deleteOpenMonitor(monitor.getCodMonitor());
+                }else{
+                    cassandraRequests.postOpenMonitor(openMonitor);
+
                 }
             }
             return true;
