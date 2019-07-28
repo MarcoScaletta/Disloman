@@ -1,27 +1,23 @@
+
 package schedulerservice.scheduler;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.ResourceAccessException;
 import schedulerservice.model.Turno;
 import schedulerservice.model.cassandraobjects.OpenMonitor;
 import schedulerservice.model.records.Records;
 import schedulerservice.model.records.RecordsList;
-import schedulerservice.model.smartshareobject.Fase;
-import schedulerservice.model.smartshareobject.ListaMonitor;
-import schedulerservice.model.smartshareobject.Monitor;
-import schedulerservice.model.smartshareobject.ProdottoLavorato;
+import schedulerservice.model.smartshareobject.*;
 import schedulerservice.requestsapi.CassandraRequests;
 import schedulerservice.requestsapi.SmartHingeRequests;
 import schedulerservice.requestsapi.SmartShareRequests;
 
 import javax.annotation.PostConstruct;
 import java.sql.Timestamp;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Component
@@ -211,26 +207,35 @@ public class Scheduler {
                     }catch(Exception e){
                         logger.err(codFase);
                         logger.err(odlFasiMap.toString());
+                        e.printStackTrace();
                     }
                 }
             }
             if(fase != null) {
 
-                if (fase.getListaProdottiLavorati().size() < 1) {
-                    String log = "ERR: Lista prodotti lavorati vuota.";
-                    if(first)
-                        logger.logFirst(log);
-                    else
-                        logger.logSecond(log);
-                    return false;
+                if (fase.getCodFase().equals("0-100") && fase.getCodODL().equals("74477")) {
+
+                    codCommessa = "68928";
+                    codProdotto = "1129993";
+                    nomeProdotto = "no-name";
+                    turno = Turno.getTurno(m.getTimeStart()) + "";
+                } else{
+                    if (fase.getListaProdottiLavorati().size() < 1) {
+                        String log = "ERR: Lista prodotti lavorati vuota.";
+                        if (first)
+                            logger.logFirst(log);
+                        else
+                            logger.logSecond(log);
+                        return false;
+                    }
+
+                    prodottoLavorato = fase.getListaProdottiLavorati().get(0);
+                    codCommessa = prodottoLavorato.getCodCommessa();
+                    codProdotto = prodottoLavorato.getCodProdotto();
+                    nomeProdotto = prodottoLavorato.getNomeProdotto();
+                    turno = Turno.getTurno(m.getTimeStart()) + "";
+
                 }
-
-                prodottoLavorato = fase.getListaProdottiLavorati().get(0);
-                codCommessa = prodottoLavorato.getCodCommessa();
-                codProdotto = prodottoLavorato.getCodProdotto();
-                nomeProdotto = prodottoLavorato.getNomeProdotto();
-                turno = Turno.getTurno(m.getTimeStart()) + "";
-
 
                 String [] logs =new String[] {"Monitor: " + m.getCodMonitor(),
                         ">>     Start: " + startDate,
@@ -292,21 +297,21 @@ public class Scheduler {
             genericRecords.setTurno(turno);
 
             try {
-                recordsTappatrice.getRecordsList().addAll(smartHingeRequests.getTappatriceRecord(start, stop));
+//                recordsTappatrice.getRecordsList().addAll(smartHingeRequests.getTappatriceRecord(start, stop));
                 recordsEtichettatrice.getRecordsList().addAll(smartHingeRequests.getEtichettatriceRecord(start, stop));
-                recordsIncartonatrice.getRecordsList().addAll(smartHingeRequests.getIncartonatriceRecord(start, stop));
-                recordsBilancia.getRecordsList().addAll(smartHingeRequests.getBilanciaRecord(start, stop));
+//                recordsIncartonatrice.getRecordsList().addAll(smartHingeRequests.getIncartonatriceRecord(start, stop));
+//                recordsBilancia.getRecordsList().addAll(smartHingeRequests.getBilanciaRecord(start, stop));
 
                 setCommonProperties(recordsTappatrice, genericRecords);
                 setCommonProperties(recordsEtichettatrice, genericRecords);
                 setCommonProperties(recordsIncartonatrice, genericRecords);
                 setCommonProperties(recordsBilancia, genericRecords);
 
-                cassandraRequests.postRecordsTappatrice(recordsTappatrice);
+//                cassandraRequests.postRecordsTappatrice(recordsTappatrice);
                 cassandraRequests.postRecordsEtichettatrice(recordsEtichettatrice);
-                cassandraRequests.postRecordsIncartonatrice(recordsIncartonatrice);
-                cassandraRequests.postRecordsBilancia(recordsBilancia);
-            }catch (Exception e){
+//                cassandraRequests.postRecordsIncartonatrice(recordsIncartonatrice);
+//                cassandraRequests.postRecordsBilancia(recordsBilancia);
+            }catch (ResourceAccessException e){
                 e.printStackTrace();
                 return false;
             }
