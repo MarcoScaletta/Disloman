@@ -10,6 +10,6 @@ import java.util.List;
 @Getter
 public class TempoCicloList {
 
-    @JsonProperty("anomalie_list")
+    @JsonProperty("tempo_ciclo_list")
     List<TempoCiclo> recordsList = new ArrayList<>();
 }
