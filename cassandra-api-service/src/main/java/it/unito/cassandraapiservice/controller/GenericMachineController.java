@@ -35,6 +35,8 @@ public class GenericMachineController {
     RealTimeRepository realTimeRepository;
 
 
+
+
     @GetMapping("/api/ssb/")
     public String test()
     {
@@ -105,6 +107,22 @@ public class GenericMachineController {
         Optional<RealTime> result = realTimeRepository.findById(macchina);
         return result.map(ResponseEntity::ok).orElseGet(() ->
                 ResponseEntity.status(404).body(null));
+    }
+
+    @GetMapping("api/anomalie/macchina/{macchina}/")
+    public ResponseEntity<AnomalieList> getAnomalie(@PathVariable String macchina){
+        GenericMachineOperations machineOperations = getMachineOperations(macchina);
+        if (machineOperations == null)
+            return ResponseEntity.status(404).body(null);
+        return ResponseEntity.ok(machineOperations.getAnomalie());
+    }
+
+    @GetMapping("api/tempo-ciclo/macchina/{macchina}/")
+    public ResponseEntity<TempoCicloList> getTempoCiclo(@PathVariable String macchina){
+        GenericMachineOperations machineOperations = getMachineOperations(macchina);
+        if (machineOperations == null)
+            return ResponseEntity.status(404).body(null);
+        return ResponseEntity.ok(machineOperations.getTempoCiclo());
     }
 
 

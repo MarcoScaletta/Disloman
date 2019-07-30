@@ -3,10 +3,14 @@ package it.unito.cassandraapiservice.model.machinepersistentoperations;
 import it.unito.cassandraapiservice.controller.GenericMachineOperations;
 import it.unito.cassandraapiservice.model.apiobjects.*;
 import it.unito.cassandraapiservice.model.impl.etichettatrice.*;
+import it.unito.cassandraapiservice.model.impl.generic.Anomalie;
 import it.unito.cassandraapiservice.model.impl.generic.Records;
+import it.unito.cassandraapiservice.model.impl.generic.TempoCiclo;
 import it.unito.cassandraapiservice.model.repository.etichettatrice.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Collection;
 
 @Component
 public class EtichettatriceOperations implements GenericMachineOperations {
@@ -25,6 +29,12 @@ public class EtichettatriceOperations implements GenericMachineOperations {
 
     @Autowired
     RisultatiODLTurnoEtichettatriceRepository risultatiODLTurnoEtichettatriceRepository;
+
+    @Autowired
+    AnomalieEtichettatriceRepository anomalieEtichettatriceRepository;
+
+    @Autowired
+    TempoCicloEtichettatriceRepository tempoCicloEtichettatriceRepository;
 
     public RecordsList getRecords(){
         Iterable<RecordsEtichettatrice> result = repository.findAll();
@@ -79,5 +89,21 @@ public class EtichettatriceOperations implements GenericMachineOperations {
         RisultatiODLTurnoList risultatiODLTurnoList = new RisultatiODLTurnoList();
         result.forEach(risultatiODLTurnoList.getRisultatiODLTurnoList()::add);
         return risultatiODLTurnoList;
+    }
+
+    @Override
+    public AnomalieList getAnomalie() {
+        Iterable<AnomalieEtichettatrice> result = anomalieEtichettatriceRepository.findAll();
+        AnomalieList anomalieList = new AnomalieList();
+        anomalieList.getRecordsList().addAll((Collection<? extends Anomalie>) result);
+        return anomalieList;
+    }
+
+    @Override
+    public TempoCicloList getTempoCiclo() {
+        Iterable<TempoCicloEtichettatrice> result = tempoCicloEtichettatriceRepository.findAll();
+        TempoCicloList tempoCicloList = new TempoCicloList();
+        tempoCicloList.getRecordsList().addAll((Collection<? extends TempoCiclo>) result);
+        return tempoCicloList;
     }
 }

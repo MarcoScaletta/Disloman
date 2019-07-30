@@ -3,10 +3,14 @@ package it.unito.cassandraapiservice.model.machinepersistentoperations;
 import it.unito.cassandraapiservice.controller.GenericMachineOperations;
 import it.unito.cassandraapiservice.model.apiobjects.*;
 import it.unito.cassandraapiservice.model.impl.bilancia.*;
+import it.unito.cassandraapiservice.model.impl.generic.Anomalie;
 import it.unito.cassandraapiservice.model.impl.generic.Records;
+import it.unito.cassandraapiservice.model.impl.generic.TempoCiclo;
 import it.unito.cassandraapiservice.model.repository.bilancia.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Collection;
 
 @Component
 public class BilanciaOperations implements GenericMachineOperations {
@@ -25,6 +29,12 @@ public class BilanciaOperations implements GenericMachineOperations {
 
     @Autowired
     RisultatiODLTurnoBilanciaRepository risultatiODLTurnoBilanciaRepository;
+
+    @Autowired
+    AnomalieBilanciaRepository anomalieBilanciaRepository;
+
+    @Autowired
+    TempoCicloBilanciaRepository tempoCicloBilanciaRepository;
 
     public RecordsList getRecords(){
         Iterable<RecordsBilancia> result = repository.findAll();
@@ -78,6 +88,22 @@ public class BilanciaOperations implements GenericMachineOperations {
         RisultatiODLTurnoList risultatiODLTurnoList = new RisultatiODLTurnoList();
         result.forEach(risultatiODLTurnoList.getRisultatiODLTurnoList()::add);
         return risultatiODLTurnoList;
+    }
+
+    @Override
+    public AnomalieList getAnomalie() {
+        Iterable<AnomalieBilancia> result = anomalieBilanciaRepository.findAll();
+        AnomalieList anomalieList = new AnomalieList();
+        anomalieList.getRecordsList().addAll((Collection<? extends Anomalie>) result);
+        return anomalieList;
+    }
+
+    @Override
+    public TempoCicloList getTempoCiclo() {
+        Iterable<TempoCicloBilancia> result = tempoCicloBilanciaRepository.findAll();
+        TempoCicloList tempoCicloList = new TempoCicloList();
+        tempoCicloList.getRecordsList().addAll((Collection<? extends TempoCiclo>) result);
+        return tempoCicloList;
     }
 
 

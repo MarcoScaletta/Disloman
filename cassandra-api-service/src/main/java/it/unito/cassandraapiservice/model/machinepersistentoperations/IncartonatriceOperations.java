@@ -2,11 +2,15 @@ package it.unito.cassandraapiservice.model.machinepersistentoperations;
 
 import it.unito.cassandraapiservice.controller.GenericMachineOperations;
 import it.unito.cassandraapiservice.model.apiobjects.*;
+import it.unito.cassandraapiservice.model.impl.generic.Anomalie;
+import it.unito.cassandraapiservice.model.impl.generic.TempoCiclo;
 import it.unito.cassandraapiservice.model.impl.incartonatrice.*;
 import it.unito.cassandraapiservice.model.impl.generic.Records;
 import it.unito.cassandraapiservice.model.repository.incartonatrice.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Collection;
 
 @Component
 public class IncartonatriceOperations implements GenericMachineOperations {
@@ -25,6 +29,12 @@ public class IncartonatriceOperations implements GenericMachineOperations {
 
     @Autowired
     RisultatiODLTurnoIncartonatriceRepository risultatiODLTurnoIncartonatriceRepository;
+
+    @Autowired
+    AnomalieIncartonatriceRepository anomalieIncartonatriceRepository;
+
+    @Autowired
+    TempoCicloIncartonatriceRepository tempoCicloIncartonatriceRepository;
 
     public RecordsList getRecords(){
         Iterable<RecordsIncartonatrice> result = repository.findAll();
@@ -78,5 +88,22 @@ public class IncartonatriceOperations implements GenericMachineOperations {
         RisultatiODLTurnoList risultatiODLTurnoList = new RisultatiODLTurnoList();
         result.forEach(risultatiODLTurnoList.getRisultatiODLTurnoList()::add);
         return risultatiODLTurnoList;
+    }
+
+    @Override
+    public AnomalieList getAnomalie() {
+        Iterable<AnomalieIncartonatrice> result = anomalieIncartonatriceRepository.findAll();
+        AnomalieList anomalieList = new AnomalieList();
+        anomalieList.getRecordsList().addAll((Collection<? extends Anomalie>) result);
+        return anomalieList;
+    }
+
+
+    @Override
+    public TempoCicloList getTempoCiclo() {
+        Iterable<TempoCicloIncartonatrice> result = tempoCicloIncartonatriceRepository.findAll();
+        TempoCicloList tempoCicloList = new TempoCicloList();
+        tempoCicloList.getRecordsList().addAll((Collection<? extends TempoCiclo>) result);
+        return tempoCicloList;
     }
 }
