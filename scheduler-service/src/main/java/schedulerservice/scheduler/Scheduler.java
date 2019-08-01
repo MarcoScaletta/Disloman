@@ -10,13 +10,18 @@ import schedulerservice.model.Turno;
 import schedulerservice.model.cassandraobjects.OpenMonitor;
 import schedulerservice.model.records.Records;
 import schedulerservice.model.records.RecordsList;
-import schedulerservice.model.smartshareobject.*;
+import schedulerservice.model.smartshareobject.Fase;
+import schedulerservice.model.smartshareobject.ListaMonitor;
+import schedulerservice.model.smartshareobject.Monitor;
+import schedulerservice.model.smartshareobject.ProdottoLavorato;
 import schedulerservice.requestsapi.CassandraRequests;
 import schedulerservice.requestsapi.SmartHingeRequests;
 import schedulerservice.requestsapi.SmartShareRequests;
 
 import javax.annotation.PostConstruct;
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Slf4j
@@ -114,6 +119,7 @@ public class Scheduler {
     public boolean newMonitor() {
         Monitor monitor;
         boolean isToBeClosed;
+        long nowMillis = System.currentTimeMillis();
         try{
             OpenMonitor openMonitor = cassandraRequests.getOpenMonitor();
 
@@ -129,34 +135,45 @@ public class Scheduler {
                     logger.logFirst("No new open monitor");
                     return false;
                 }
-            }
-            logger.logFirst("old monitor: " +openMonitor.getCodMonitor());
-            monitor = smartShareRequests.getMonitor(openMonitor.getCodMonitor());
-            monitor.setTimeStart(openMonitor.getStartTime());
+            }else{
+                logger.logFirst("old monitor: " +openMonitor.getCodMonitor());
+                monitor = smartShareRequests.getMonitor(openMonitor.getCodMonitor());
+                monitor.setTimeStart(openMonitor.getStartTime());
 
-            if(monitor.getTimeStop() == null){
-                logger.logFirst("INFO: Il monitor ["+ monitor.getCodMonitor()+"] e' ancora aperto.");
-                logger.logFirst("INFO: Nuovo intervallo parziale"
-                        +"\n      Inizio: "+ new Timestamp(Long.parseLong(openMonitor.getStartTime()))
-                        +"\n      Fine: "  + new Timestamp(System.currentTimeMillis()));
-                monitor.setTimeStop(System.currentTimeMillis()+"");
-                isToBeClosed = false;
-            }else{
-                logger.logFirst("INFO: Il monitor ["+ monitor.getCodMonitor()+"] e' stato chiuso.");
-                logger.logFirst("\nINFO: Nuovo intervallo parziale"
-                        +"\n      Inizio: " + new Timestamp(Long.parseLong(openMonitor.getStartTime()))
-                        +"\n      Fine: " + new Timestamp(Long.parseLong(monitor.getTimeStop())));
-                isToBeClosed = true;
-            }
-            if(!saveMonitor(monitor, isToBeClosed,null, true)) {
-                return false;
-            }else{
-                openMonitor.setStartTime(monitor.getTimeStop());
-                if(isToBeClosed){
-                    cassandraRequests.deleteOpenMonitor(monitor.getCodMonitor());
+                if(monitor.getTimeStop() == null){
+
+                    logger.logFirst("INFO: Il monitor ["+ monitor.getCodMonitor()+"] e' ancora aperto.");
+                    logger.logFirst("INFO: Nuovo intervallo parziale"
+                            +"\n      Inizio: "+ new Timestamp(Long.parseLong(openMonitor.getStartTime()))
+                            +"\n      Fine: "  + new Timestamp(nowMillis));
+                    monitor.setTimeStop(nowMillis+  "");
+                    isToBeClosed = false;
                 }else{
-                    cassandraRequests.postOpenMonitor(openMonitor);
 
+                    if(Long.parseLong(openMonitor.getStartTime()) > Long.parseLong(monitor.getTimeStop())){
+                        logger.logFirst("INFO: Il monitor [" + monitor.getCodMonitor()
+                                + "] e' stato chiuso in ritardo.");
+
+                    }else {
+                        logger.logFirst("INFO: Il monitor [" + monitor.getCodMonitor() + "] e' stato chiuso.");
+                        logger.logFirst("\nINFO: Nuovo intervallo parziale"
+                                + "\n      Inizio: " + new Timestamp(Long.parseLong(openMonitor.getStartTime()))
+                                + "\n      Fine: " + new Timestamp(Long.parseLong(monitor.getTimeStop())));
+                    }
+                    isToBeClosed = true;
+                }
+
+                if(Long.parseLong(openMonitor.getStartTime()) > Long.parseLong(monitor.getTimeStop())){
+                    cassandraRequests.deleteOpenMonitor(monitor.getCodMonitor());
+                }else if(!saveMonitor(monitor, isToBeClosed,null, true)) {
+                    return false;
+                }else{
+                    openMonitor.setStartTime(monitor.getTimeStop());
+                    if(isToBeClosed){
+                        cassandraRequests.deleteOpenMonitor(monitor.getCodMonitor());
+                    }else{
+                        cassandraRequests.postOpenMonitor(openMonitor);
+                    }
                 }
             }
             return true;
@@ -217,7 +234,7 @@ public class Scheduler {
 
                     codCommessa = "68928";
                     codProdotto = "1129993";
-                    nomeProdotto = "no-name";
+                    nomeProdotto = "BETOTAL PLUS CLASSIC";
                     turno = Turno.getTurno(m.getTimeStart()) + "";
                 } else{
                     if (fase.getListaProdottiLavorati().size() < 1) {
@@ -279,39 +296,43 @@ public class Scheduler {
                                String turno,
                                boolean closeMonitor){
         Date start,stop;
+        SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        isoFormat.setTimeZone(TimeZone.getTimeZone("Europe/Rome"));
         if(monitor.getTimeStop() != null){
-            start = new Date(Long.parseLong(monitor.getTimeStart()));
-            stop = new Date(Long.parseLong(monitor.getTimeStop()));
+            try{
 
-            RecordsList recordsTappatrice = new RecordsList();
-            RecordsList recordsEtichettatrice= new RecordsList();
-            RecordsList recordsIncartonatrice = new RecordsList();
-            RecordsList recordsBilancia = new RecordsList();
+                start = isoFormat.parse(isoFormat.format(new Date(Long.parseLong(monitor.getTimeStart()))));
+                stop = isoFormat.parse(isoFormat.format(new Date(Long.parseLong(monitor.getTimeStop()))));
 
-            Records genericRecords = new Records();
 
-            genericRecords.setCodiceProdotto(codiceProdotto);
-            genericRecords.setNomeProdotto(nomeProdotto);
-            genericRecords.setCodiceCommessa(codiceCommessa);
-            genericRecords.setCodiceODL(codiceODL);
-            genericRecords.setTurno(turno);
+                RecordsList recordsTappatrice = new RecordsList();
+                RecordsList recordsEtichettatrice= new RecordsList();
+                RecordsList recordsIncartonatrice = new RecordsList();
+                RecordsList recordsBilancia = new RecordsList();
 
-            try {
-//                recordsTappatrice.getRecordsList().addAll(smartHingeRequests.getTappatriceRecord(start, stop));
+                Records genericRecords = new Records();
+
+                genericRecords.setCodiceProdotto(codiceProdotto);
+                genericRecords.setNomeProdotto(nomeProdotto);
+                genericRecords.setCodiceCommessa(codiceCommessa);
+                genericRecords.setCodiceODL(codiceODL);
+                genericRecords.setTurno(turno);
+
+                recordsTappatrice.getRecordsList().addAll(smartHingeRequests.getTappatriceRecord(start, stop));
                 recordsEtichettatrice.getRecordsList().addAll(smartHingeRequests.getEtichettatriceRecord(start, stop));
-//                recordsIncartonatrice.getRecordsList().addAll(smartHingeRequests.getIncartonatriceRecord(start, stop));
-//                recordsBilancia.getRecordsList().addAll(smartHingeRequests.getBilanciaRecord(start, stop));
+                recordsIncartonatrice.getRecordsList().addAll(smartHingeRequests.getIncartonatriceRecord(start, stop));
+                recordsBilancia.getRecordsList().addAll(smartHingeRequests.getBilanciaRecord(start, stop));
 
                 setCommonProperties(recordsTappatrice, genericRecords);
                 setCommonProperties(recordsEtichettatrice, genericRecords);
                 setCommonProperties(recordsIncartonatrice, genericRecords);
                 setCommonProperties(recordsBilancia, genericRecords);
 
-//                cassandraRequests.postRecordsTappatrice(recordsTappatrice);
+                cassandraRequests.postRecordsTappatrice(recordsTappatrice);
                 cassandraRequests.postRecordsEtichettatrice(recordsEtichettatrice);
-//                cassandraRequests.postRecordsIncartonatrice(recordsIncartonatrice);
-//                cassandraRequests.postRecordsBilancia(recordsBilancia);
-            }catch (ResourceAccessException e){
+                cassandraRequests.postRecordsIncartonatrice(recordsIncartonatrice);
+                cassandraRequests.postRecordsBilancia(recordsBilancia);
+            }catch (ResourceAccessException | ParseException e){
                 e.printStackTrace();
                 return false;
             }
