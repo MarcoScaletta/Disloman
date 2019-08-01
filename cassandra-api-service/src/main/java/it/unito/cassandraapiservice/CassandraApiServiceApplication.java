@@ -1,5 +1,7 @@
 package it.unito.cassandraapiservice;
 
+import com.datastax.driver.core.policies.ConstantReconnectionPolicy;
+import com.datastax.driver.core.policies.ReconnectionPolicy;
 import it.unito.cassandraapiservice.model.machinepersistentoperations.BilanciaOperations;
 import it.unito.cassandraapiservice.model.machinepersistentoperations.EtichettatriceOperations;
 import it.unito.cassandraapiservice.model.machinepersistentoperations.IncartonatriceOperations;
@@ -11,6 +13,11 @@ import org.springframework.context.annotation.Scope;
 
 @SpringBootApplication
 public class CassandraApiServiceApplication{
+
+	@Bean
+	public ReconnectionPolicy reconnectionPolicy(){
+		return new ConstantReconnectionPolicy(30);
+	}
 
 	@Bean
 	@Scope(value = "singleton")
