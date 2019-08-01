@@ -18,4 +18,7 @@ public interface GenericMachineOperations {
 
     RisultatiODLTurnoList getRisultatiODLTurno(String codiceODL);
 
+    AnomalieList getAnomalie();
+
+    TempoCicloList getTempoCiclo();
 }

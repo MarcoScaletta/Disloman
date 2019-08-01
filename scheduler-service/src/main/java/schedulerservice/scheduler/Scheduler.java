@@ -1,9 +1,11 @@
+
 package schedulerservice.scheduler;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.ResourceAccessException;
 import schedulerservice.model.Turno;
 import schedulerservice.model.cassandraobjects.OpenMonitor;
 import schedulerservice.model.records.Records;
@@ -18,10 +20,9 @@ import schedulerservice.requestsapi.SmartShareRequests;
 
 import javax.annotation.PostConstruct;
 import java.sql.Timestamp;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Slf4j
 @Component
@@ -118,6 +119,7 @@ public class Scheduler {
     public boolean newMonitor() {
         Monitor monitor;
         boolean isToBeClosed;
+        long nowMillis = System.currentTimeMillis();
         try{
             OpenMonitor openMonitor = cassandraRequests.getOpenMonitor();
 
@@ -133,34 +135,45 @@ public class Scheduler {
                     logger.logFirst("No new open monitor");
                     return false;
                 }
-            }
-            logger.logFirst("old monitor: " +openMonitor.getCodMonitor());
-            monitor = smartShareRequests.getMonitor(openMonitor.getCodMonitor());
-            monitor.setTimeStart(openMonitor.getStartTime());
+            }else{
+                logger.logFirst("old monitor: " +openMonitor.getCodMonitor());
+                monitor = smartShareRequests.getMonitor(openMonitor.getCodMonitor());
+                monitor.setTimeStart(openMonitor.getStartTime());
 
-            if(monitor.getTimeStop() == null){
-                logger.logFirst("INFO: Il monitor ["+ monitor.getCodMonitor()+"] e' ancora aperto.");
-                logger.logFirst("INFO: Nuovo intervallo parziale"
-                        +"\n      Inizio: "+ new Timestamp(Long.parseLong(openMonitor.getStartTime()))
-                        +"\n      Fine: "  + new Timestamp(System.currentTimeMillis()));
-                monitor.setTimeStop(System.currentTimeMillis()+"");
-                isToBeClosed = false;
-            }else{
-                logger.logFirst("INFO: Il monitor ["+ monitor.getCodMonitor()+"] e' stato chiuso.");
-                logger.logFirst("\nINFO: Nuovo intervallo parziale"
-                        +"\n      Inizio: " + new Timestamp(Long.parseLong(openMonitor.getStartTime()))
-                        +"\n      Fine: " + new Timestamp(Long.parseLong(monitor.getTimeStop())));
-                isToBeClosed = true;
-            }
-            if(!saveMonitor(monitor, isToBeClosed,null, true)) {
-                return false;
-            }else{
-                openMonitor.setStartTime(monitor.getTimeStop());
-                if(isToBeClosed){
-                    cassandraRequests.deleteOpenMonitor(monitor.getCodMonitor());
+                if(monitor.getTimeStop() == null){
+
+                    logger.logFirst("INFO: Il monitor ["+ monitor.getCodMonitor()+"] e' ancora aperto.");
+                    logger.logFirst("INFO: Nuovo intervallo parziale"
+                            +"\n      Inizio: "+ new Timestamp(Long.parseLong(openMonitor.getStartTime()))
+                            +"\n      Fine: "  + new Timestamp(nowMillis));
+                    monitor.setTimeStop(nowMillis+  "");
+                    isToBeClosed = false;
                 }else{
-                    cassandraRequests.postOpenMonitor(openMonitor);
 
+                    if(Long.parseLong(openMonitor.getStartTime()) > Long.parseLong(monitor.getTimeStop())){
+                        logger.logFirst("INFO: Il monitor [" + monitor.getCodMonitor()
+                                + "] e' stato chiuso in ritardo.");
+
+                    }else {
+                        logger.logFirst("INFO: Il monitor [" + monitor.getCodMonitor() + "] e' stato chiuso.");
+                        logger.logFirst("\nINFO: Nuovo intervallo parziale"
+                                + "\n      Inizio: " + new Timestamp(Long.parseLong(openMonitor.getStartTime()))
+                                + "\n      Fine: " + new Timestamp(Long.parseLong(monitor.getTimeStop())));
+                    }
+                    isToBeClosed = true;
+                }
+
+                if(Long.parseLong(openMonitor.getStartTime()) > Long.parseLong(monitor.getTimeStop())){
+                    cassandraRequests.deleteOpenMonitor(monitor.getCodMonitor());
+                }else if(!saveMonitor(monitor, isToBeClosed,null, true)) {
+                    return false;
+                }else{
+                    openMonitor.setStartTime(monitor.getTimeStop());
+                    if(isToBeClosed){
+                        cassandraRequests.deleteOpenMonitor(monitor.getCodMonitor());
+                    }else{
+                        cassandraRequests.postOpenMonitor(openMonitor);
+                    }
                 }
             }
             return true;
@@ -211,26 +224,35 @@ public class Scheduler {
                     }catch(Exception e){
                         logger.err(codFase);
                         logger.err(odlFasiMap.toString());
+                        e.printStackTrace();
                     }
                 }
             }
             if(fase != null) {
 
-                if (fase.getListaProdottiLavorati().size() < 1) {
-                    String log = "ERR: Lista prodotti lavorati vuota.";
-                    if(first)
-                        logger.logFirst(log);
-                    else
-                        logger.logSecond(log);
-                    return false;
+                if (fase.getCodFase().equals("0-100") && fase.getCodODL().equals("74477")) {
+
+                    codCommessa = "68928";
+                    codProdotto = "1129993";
+                    nomeProdotto = "BETOTAL PLUS CLASSIC";
+                    turno = Turno.getTurno(m.getTimeStart()) + "";
+                } else{
+                    if (fase.getListaProdottiLavorati().size() < 1) {
+                        String log = "ERR: Lista prodotti lavorati vuota.";
+                        if (first)
+                            logger.logFirst(log);
+                        else
+                            logger.logSecond(log);
+                        return false;
+                    }
+
+                    prodottoLavorato = fase.getListaProdottiLavorati().get(0);
+                    codCommessa = prodottoLavorato.getCodCommessa();
+                    codProdotto = prodottoLavorato.getCodProdotto();
+                    nomeProdotto = prodottoLavorato.getNomeProdotto();
+                    turno = Turno.getTurno(m.getTimeStart()) + "";
+
                 }
-
-                prodottoLavorato = fase.getListaProdottiLavorati().get(0);
-                codCommessa = prodottoLavorato.getCodCommessa();
-                codProdotto = prodottoLavorato.getCodProdotto();
-                nomeProdotto = prodottoLavorato.getNomeProdotto();
-                turno = Turno.getTurno(m.getTimeStart()) + "";
-
 
                 String [] logs =new String[] {"Monitor: " + m.getCodMonitor(),
                         ">>     Start: " + startDate,
@@ -274,24 +296,28 @@ public class Scheduler {
                                String turno,
                                boolean closeMonitor){
         Date start,stop;
+        SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        isoFormat.setTimeZone(TimeZone.getTimeZone("Europe/Rome"));
         if(monitor.getTimeStop() != null){
-            start = new Date(Long.parseLong(monitor.getTimeStart()));
-            stop = new Date(Long.parseLong(monitor.getTimeStop()));
+            try{
 
-            RecordsList recordsTappatrice = new RecordsList();
-            RecordsList recordsEtichettatrice= new RecordsList();
-            RecordsList recordsIncartonatrice = new RecordsList();
-            RecordsList recordsBilancia = new RecordsList();
+                start = isoFormat.parse(isoFormat.format(new Date(Long.parseLong(monitor.getTimeStart()))));
+                stop = isoFormat.parse(isoFormat.format(new Date(Long.parseLong(monitor.getTimeStop()))));
 
-            Records genericRecords = new Records();
 
-            genericRecords.setCodiceProdotto(codiceProdotto);
-            genericRecords.setNomeProdotto(nomeProdotto);
-            genericRecords.setCodiceCommessa(codiceCommessa);
-            genericRecords.setCodiceODL(codiceODL);
-            genericRecords.setTurno(turno);
+                RecordsList recordsTappatrice = new RecordsList();
+                RecordsList recordsEtichettatrice= new RecordsList();
+                RecordsList recordsIncartonatrice = new RecordsList();
+                RecordsList recordsBilancia = new RecordsList();
 
-            try {
+                Records genericRecords = new Records();
+
+                genericRecords.setCodiceProdotto(codiceProdotto);
+                genericRecords.setNomeProdotto(nomeProdotto);
+                genericRecords.setCodiceCommessa(codiceCommessa);
+                genericRecords.setCodiceODL(codiceODL);
+                genericRecords.setTurno(turno);
+
                 recordsTappatrice.getRecordsList().addAll(smartHingeRequests.getTappatriceRecord(start, stop));
                 recordsEtichettatrice.getRecordsList().addAll(smartHingeRequests.getEtichettatriceRecord(start, stop));
                 recordsIncartonatrice.getRecordsList().addAll(smartHingeRequests.getIncartonatriceRecord(start, stop));
@@ -306,7 +332,7 @@ public class Scheduler {
                 cassandraRequests.postRecordsEtichettatrice(recordsEtichettatrice);
                 cassandraRequests.postRecordsIncartonatrice(recordsIncartonatrice);
                 cassandraRequests.postRecordsBilancia(recordsBilancia);
-            }catch (Exception e){
+            }catch (ResourceAccessException | ParseException e){
                 e.printStackTrace();
                 return false;
             }

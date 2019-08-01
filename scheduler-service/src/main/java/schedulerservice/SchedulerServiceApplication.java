@@ -95,14 +95,20 @@ public class SchedulerServiceApplication {
 	@Bean
 	@Scope(value = "singleton")
 	public String smartHingeAPIServiceAddress(){
-		return "http://smarthinge-api:8080";
+		return "http://smarthinge-api:8090";
 	}
 
 	@Bean
 	@Scope(value = "singleton")
 	public String cassandraAPIServiceAddress(){
-		return "http://cassandra-api:8080";
+		return "http://cassandra-api.dl.ssbprogetti.it";
 	}
+
+//	@Bean
+//	@Scope(value = "singleton")
+//	public String cassandraAPIServiceAddress(){
+//		return "http://cassandra-api:8080";
+//	}
 
 	@Bean
 	@Scope(value = "singleton")

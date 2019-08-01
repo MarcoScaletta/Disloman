@@ -9,6 +9,7 @@ spring:
       port: 9042
       schema-action: create_if_not_exists
       contact-points: cassandra
+      reconnection-policy: it.unito.cassandraapiservice.controller.ReconnectionPolicy
 
 
 # Spring Boot Actuator "/health" endpoint configuration (Mostra dettagli aggiuntivi quando si ispeziona /health endpoint)
