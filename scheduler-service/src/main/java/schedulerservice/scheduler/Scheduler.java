@@ -108,7 +108,7 @@ public class Scheduler {
             }
             return true;
         }catch (HttpServerErrorException e){
-            logger.err("HTTP ERROR: " + e.getStatusCode());
+            logger.err(Thread.currentThread().getName() + "HTTP ERROR: " + e.getStatusCode());
             return false;
         }catch (Exception e){
             e.printStackTrace();
@@ -152,7 +152,9 @@ public class Scheduler {
 
                     if(Long.parseLong(openMonitor.getStartTime()) > Long.parseLong(monitor.getTimeStop())){
                         logger.logFirst("INFO: Il monitor [" + monitor.getCodMonitor()
-                                + "] e' stato chiuso in ritardo.");
+                                + "] e' stato chiuso con un ritardo di "
+                                + (Long.parseLong(openMonitor.getStartTime()) - Long.parseLong(monitor.getTimeStop()))
+                                + " secondi");
 
                     }else {
                         logger.logFirst("INFO: Il monitor [" + monitor.getCodMonitor() + "] e' stato chiuso.");
@@ -179,7 +181,7 @@ public class Scheduler {
             return true;
 
         }catch (HttpServerErrorException e){
-            logger.err("HTTP ERROR: " + e.getStatusCode());
+            logger.err(Thread.currentThread().getName() + " HTTP ERROR: " + e.getStatusCode());
             return false;
         }catch (Exception e){
             e.printStackTrace();
