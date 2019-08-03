@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.sql.SQLTransientConnectionException;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -34,6 +35,9 @@ public class RecordController {
     @Qualifier("queryEtichettatrice")
     QueryMachine queryEtichettatrice;
 
+    @Autowired
+    QueryPLD queryPLD;
+
     private SimpleDateFormat completeFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
     @GetMapping("/records/macchina/{macchina}")
@@ -45,6 +49,11 @@ public class RecordController {
             return ResponseEntity.status(404).body(null);
         }
         return getGenericRecords(queryMachine, start, stop);
+    }
+
+    @GetMapping("/activity")
+    public ResponseEntity<Boolean> getRecords() {
+        return ResponseEntity.ok(queryPLD.isActive());
     }
 
     public QueryMachine getQueryMachine(String macchina){
@@ -65,7 +74,6 @@ public class RecordController {
         List<Records> records;
         RecordsList recordsList;
         try{
-
             startTime = new Timestamp(completeFormat.parse(start).getTime());
             stopTime  = new Timestamp(completeFormat.parse(stop).getTime());
         }catch (ParseException p){
@@ -73,9 +81,10 @@ public class RecordController {
             return ResponseEntity.status(400).body(null);
         }
         records = query.queryToMachine(startTime,stopTime);
+        if(records == null)
+            return ResponseEntity.status(500).body(null);
         recordsList = new RecordsList();
         recordsList.getRecordsList().addAll(records);
-
 
         return ResponseEntity.ok(recordsList);
     }

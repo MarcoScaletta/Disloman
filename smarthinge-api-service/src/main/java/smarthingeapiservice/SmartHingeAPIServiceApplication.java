@@ -30,25 +30,32 @@ public class SmartHingeAPIServiceApplication {
     @Bean
     @Scope(value = "singleton")
     public QueryMachine queryBilancia(){
-        return new QueryMachine(bilanciaCode, bilanciaOutputCode);
+        return new QueryMachine(bilanciaCode, "bilancia", bilanciaOutputCode);
     }
 
     @Bean
     @Scope(value = "singleton")
     public QueryMachine queryIncartonatrice(){
-        return new QueryMachine(incartonatriceCode, incartonatriceOutputCode);
+        return new QueryMachine(incartonatriceCode, "incartonatrice", incartonatriceOutputCode);
     }
 
     @Bean
     @Scope(value = "singleton")
     public QueryMachine queryTappatrice(){
-        return new QueryMachine(tappatriceCode, tappatriceOutputCode);
+        return new QueryMachine(tappatriceCode, "tappatrice", tappatriceOutputCode);
     }
 
     @Bean
     @Scope(value = "singleton")
     public QueryMachine queryEtichettatrice(){
-        return new QueryMachine(etichettatriceCode, etichettatriceOutputCode);
+        return new QueryMachine(etichettatriceCode, "etichettatrice", etichettatriceOutputCode);
+    }
+
+
+    @Bean
+    @Scope(value = "singleton")
+    public QueryPLD queryPLD(){
+        return new QueryPLD();
     }
 
     public static void main(String[] args) {

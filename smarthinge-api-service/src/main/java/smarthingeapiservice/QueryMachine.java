@@ -22,10 +22,13 @@ public class QueryMachine {
 
     private final String machineCode;
 
+    private final String machineName;
+
     private final String outputCode;
 
-    public QueryMachine(String machineCode, String outputCode) {
+    public QueryMachine(String machineCode, String machineName, String outputCode) {
         this.machineCode = machineCode;
+        this.machineName = machineName;
         this.outputCode = outputCode;
     }
     @Autowired
@@ -68,7 +71,8 @@ public class QueryMachine {
             conn.close();
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.info(machineName + " Errore nell'estrazione dei record [start:\n" + startTime + " stop:" + stopTime+"]");
+            return null;
         }
         log.info("Numero totale di record estratti " + records.size() +"\n" );
         return records;
