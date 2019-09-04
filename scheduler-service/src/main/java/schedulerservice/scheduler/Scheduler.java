@@ -299,7 +299,6 @@ public class Scheduler {
                                boolean closeMonitor){
         Date start,stop;
         SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        isoFormat.setTimeZone(TimeZone.getTimeZone("Europe/Rome"));
         if(monitor.getTimeStop() != null){
             try{
 

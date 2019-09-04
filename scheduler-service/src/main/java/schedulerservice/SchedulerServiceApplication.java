@@ -1,16 +1,13 @@
 package schedulerservice;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.client.HttpClient;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.ssl.SSLContextBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.Scope;
@@ -20,20 +17,19 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ResourceUtils;
 import org.springframework.web.client.RestTemplate;
 import schedulerservice.requestsapi.CassandraRequests;
 import schedulerservice.requestsapi.SmartShareRequests;
 
+import javax.annotation.PostConstruct;
 import javax.net.ssl.SSLContext;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
-import java.sql.Timestamp;
-import java.util.Scanner;
+import java.util.Date;
+import java.util.TimeZone;
 
 @EnableScheduling
 @SpringBootApplication(scanBasePackages = "schedulerservice")
@@ -41,6 +37,12 @@ import java.util.Scanner;
 @PropertySource("classpath:properties.yml")
 public class SchedulerServiceApplication {
 
+
+	@PostConstruct
+	public void init(){
+		TimeZone.setDefault(TimeZone.getTimeZone("Europe/Rome"));
+		System.out.println("Spring boot application running in Europe/Rome timezone :"+new Date());
+	}
 
 	@Value(value = "${orchestra.token}")
 	private String token;
