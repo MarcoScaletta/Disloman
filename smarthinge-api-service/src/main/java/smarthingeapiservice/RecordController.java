@@ -38,11 +38,11 @@ public class RecordController {
     @Autowired
     QueryPLD queryPLD;
 
-    private SimpleDateFormat completeFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+    private SimpleDateFormat completeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @GetMapping("/records/macchina/{macchina}")
     public ResponseEntity<RecordsList> getRecords(@PathVariable String macchina, @RequestParam String start, @RequestParam String stop) {
-        log.info("get records from " + macchina);
+        log.info("get records from " + macchina + "start: " + start + " stop: " + stop);
         QueryMachine queryMachine = getQueryMachine(macchina);
         if (queryMachine == null){
             log.info("Machine [" + macchina +"] not existing!");
@@ -76,6 +76,7 @@ public class RecordController {
         try{
             startTime = new Timestamp(completeFormat.parse(start).getTime());
             stopTime  = new Timestamp(completeFormat.parse(stop).getTime());
+            log.info("timestamps -> " +  "start: " + startTime + " stop: " + stopTime);
         }catch (ParseException p){
             log.info("Wrong date format");
             return ResponseEntity.status(400).body(null);

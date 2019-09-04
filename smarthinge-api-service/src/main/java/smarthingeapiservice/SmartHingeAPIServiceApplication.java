@@ -8,6 +8,10 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
+import java.util.Date;
+import java.util.TimeZone;
+
 @EnableScheduling
 @SpringBootApplication
 @Slf4j
@@ -26,6 +30,11 @@ public class SmartHingeAPIServiceApplication {
     private String etichettatriceCode = "PRCS-AS-7";
     private String etichettatriceOutputCode = "DIC05";
 
+    @PostConstruct
+    public void init(){
+        TimeZone.setDefault(TimeZone.getTimeZone("Europe/Rome"));   // It will set Europe/Rome timezone
+        System.out.println("Spring boot application running in Europe/Rome timezone :"+new Date());   // It will print UTC timezone
+    }
 
     @Bean
     @Scope(value = "singleton")
